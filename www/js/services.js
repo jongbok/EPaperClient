@@ -8,40 +8,128 @@ var ages = [
             ];
 
 angular.module('starter.services', [])
+.factory('DbAccess', function($q){
+	var DbAccess = {};
+	var db = openDatabase("epaper.db","1.0", "EPaper", 5000000);
+	
+	DbAccess.ClearDownDB = function(tx) {
+		var deferred = $q.defer();
+		tx.executeSql('CREATE TABLE IF NOT EXISTS input_box (id integer primary key, date text, phone_no text, content text)',[], function(tx, res){
+			tx.executeSql('CREATE TABLE IF NOT EXISTS send_box (id integer primary key, date text, sex text, age1 integer, age2 integer,'
+					+ 'age3 integer, age4 integer, age5 integer, age6 integer, distance integer, paper_cnt integer, content text)', function(tx, res){
+						console.log('Clear DB');
+						$q.resolve(res);
+					});
+		});
 
-.factory('Messages', function(){
+		/*
+		tx.executeSql('DROP TABLE IF EXISTS input_box',[], function(tx, res) {
+			tx.executeSql('DROP TABLE IF EXISTS send_box',[], function(tx, res){
+				tx.executeSql('CREATE TABLE IF NOT EXISTS input_box (id integer primary key, date text, phone_no text, content text)',[], function(tx, res){
+					tx.executeSql('CREATE TABLE IF NOT EXISTS send_box (id integer primary key, date text, sex text, age1 integer, age2 integer,'
+							+ 'age3 integer, age4 integer, age5 integer, age6 integer, distance integer, paper_cnt integer, content text)', function(tx, res){
+								$q.resolve(res);
+							});
+				});
+			});
+		});
+		*/
+		
+		return deferred.promise;
+	};
+	
+	DbAccess.insertTest = function(tx) {
+		var deferred = $q.defer();
+		var messages = [
+		                ['2015-03-02 09:22:33', '01022223333', '강아지 찾아요~ 요크셔테리 검은색, 빨간색 조끼에 방울 달았습니다. 찾아주시는 분에게 사례하겠습니다.'],
+		                ['2015-03-02 10:25:43', '01022224444', '신사시장 입구 오이야채가게에서 지금부터1시간동안만 반짝세일합니다, 쪽파한단500원, 시금치한단600원, 브로컬리2송이 500원 어서들 오세요~'],
+		                ['2015-03-02 10:32:13', '01022225555', '30분뒤 같이 소주한잔 하실분 연락주세요']
+		               ];
+		var send = ['2015-03-01 14:22:11', 'M', 1, 1, 1, 0, 0, 0, 1000, 100, '신림,봉청,낙성대역 근처 27세여자 경리직 구합니다. 3년경력 있고, 엑셀/파워포인트 아주 잘 다룹니다.'];
+		var query1 = "INSERT INTO input_box(date, phone_no, content) VALUES (?,?,?)";
+		var query2 = "INSERT INTO send_box (date, sex, age1, age2, age3, age4, age5, age6, distance, paper_cnt, content) ";
+			query2 += "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		tx.executeSql(query1, messages[0], function(tx, res){
+			tx.executeSql(query1, messages[1], function(tx, res){
+				tx.executeSql(query1, messages[2], function(tx, res){
+					tx.executeSql(query2, send, function(tx, res){
+						console.log("INSERT TEST");
+						console.log(JSON.stringify(res));
+						deferred.resolve(res);
+					});
+				});
+			});
+		});
+		
+	    return deferred.promise;
+	};
+	
+	DbAccess.SingleResultHandler = function(deferred) {
+		return function(tx, results) {
+			var len = results.rows.length;
+			var output_results = [];
+
+			for (var i = 0; i < len; i++) {
+				output_results.push(results.rows.item(i));
+			}
+			deferred.resolve(output_results[0]);
+		};
+	};
+
+	DbAccess.MultipleResultHandler = function(deferred) {
+		return function(tx, results) {
+			var len = results.rows.length;
+			var output_results = [];
+
+			for (var i = 0; i < len; i++) {
+				output_results.push(results.rows.item(i));
+			}
+
+			console.log('query executed!');
+			deferred.resolve(output_results);
+		};
+	};
+	
+	DbAccess.DefaultErrorHandler = function(err) {
+		console.log("Error processing SQL: " + JSON.stringify(err));
+	};
+
+	DbAccess.promisedQuery = function(query, successCB, errorCB) {
+	    //console.log(query);
+		var deferred = $q.defer();
+		db.transaction(function(tx) {
+			tx.executeSql(query, [], successCB(deferred), errorCB);
+		}, errorCB);
+		console.log(query);
+		return deferred.promise;
+	};
+	
+	DbAccess.executeQuery = function(query, args, errorCB){
+		var deferred = $q.defer();
+		db.transaction(function(tx) {
+			tx.executeSql(query, args, function(tx,result){ deferred.resolve(result); }, errorCB);
+		}, errorCB);
+		console.log(query);
+		return deferred.promise;
+	};
+
+//	db.transaction(DbAccess.ClearDownDB, DbAccess.DefaultErrorHandler);
+//	db.transaction(DbAccess.insertTest, DbAccess.DefaultErrorHandler);
+	
+	return DbAccess;
+})
+
+.factory('Messages', function(DbAccess){
 	var messages = [];
 	return {
 		all: function(){
-			var db = window.sqlitePlugin.openDatabase("epaper.db","1.0", "EPaper", 5000000);
-			db.transaction(function(tx) {
-				tx.executeSql("select * from input_box", [], function(tx, res) {
-					for(var i=0; i<res.rows.length; i++){
-						messages.push({
-							id: res.rows.item(i).id,
-							date: res.rows.item(i).date,
-							phoneNo: res.rows.item(i).phone_no,
-							content: res.rows.item(i).content
-						});
-					}
-					return messages;
-				});
-			},
-			function(e) {
-		        console.log("ERROR: " + e.message);
-		    });
+			var query = "select * from input_box";
+			messages = DbAccess.promisedQuery(query, DbAccess.MultipleResultHandler, DbAccess.DefaultErrorHandler);
+			return messages;
 		},
 		remove: function(message){
-			/*
-			db.transaction(function(tx) {
-				tx.executeSql("delete from input_box where id=?", [message.id], function(tx, res){
-					messages.splice(messages.indexOf(message), 1);
-				});
-			},
-			function(e) {
-		        console.log("ERROR: " + e.message);
-		    });
-			*/
+			var query = "delete from input_box where id = ?";
+			DbAccess.executeQuery(query, [message.id], DbAccess.DefaultErrorHandler);
 			messages.splice(messages.indexOf(message), 1);
 		},
 		reject: function(message){

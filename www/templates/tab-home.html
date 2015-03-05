@@ -1,11 +1,11 @@
-<ion-view view-title="받은전단지">
+<ion-view view-title="받은전단지" ng-init="init()" >
   <ion-content class="padding" >
     <div class="list card" ng-repeat="message in messages" >
       <div class="item item-divider">
       	<div class="row" >
       		<div class="col"><h2>{{message.date}}</h2></div>
       		<div class="col" style="text-align:right;">
-      			<a href="tel:{{message.phoneNo}}" class="button button-small icon-left ion-ios7-telephone button button button-balanced">전화</a>
+      			<a href="tel:{{message.phone_no}}" class="button button-small icon-left ion-ios7-telephone button button button-balanced">전화</a>
       			<button class="button button-small icon-left ion-trash-a button button-assertive" ng-click="remove(message)" >삭제</button>
       			<button class="button button-small icon-left ion-thumbsdown button button-dark" ng-click="reject(message)">거부</button>
       		</div>

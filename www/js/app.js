@@ -5,9 +5,9 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngCordova'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $rootScope, $cordovaSQLite) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -18,32 +18,48 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+    var db = $cordovaSQLite.openDB({ name: "my.db", bgType: 1 });
+    var inputbox_create = 'CREATE TABLE IF NOT EXISTS input_box (id integer primary key, date text, phone_no text, content text)';
+    var inputbox_drop = 'DROP TABLE IF EXISTS input_box';
+    var inputbox_insert = 'INSERT INTO input_box(date, phone_no, content) VALUES (?,?,?)';
+    var inputbox_select = 'SELECT * FROM input_box';
+    var messages = [
+                    ['2015-03-02 09:22:33', '01022223333', '강아지 찾아요~ 요크셔테리 검은색, 빨간색 조끼에 방울 달았습니다. 찾아주시는 분에게 사례하겠습니다.'],
+                    ['2015-03-02 10:25:43', '01022224444', '신사시장 입구 오이야채가게에서 지금부터1시간동안만 반짝세일합니다, 쪽파한단500원, 시금치한단600원, 브로컬리2송이 500원 어서들 오세요~'],
+                    ['2015-03-02 10:32:13', '01022225555', '30분뒤 같이 소주한잔 하실분 연락주세요']
+                  ];
     
-	var inputs = [{
-		phoneNo: '01022223333',
-		date: '2015-03-02 09:22:33',
-		content: '강아지 찾아요~ 요크셔테리 검은색, 빨간색 조끼에 방울 달았습니다. 찾아주시는 분에게 사례하겠습니다.'
-	},
-	{
-		phoneNo: '01022224444',
-		date: '2015-03-02 10:25:43',
-		content: '신사시장 입구 오이야채가게에서 지금부터1시간동안만 반짝세일합니다, 쪽파한단500원, 시금치한단600원, 브로컬리2송이 500원 어서들 오세요~'
-	},
-	{
-		phoneNo: '01022225555',
-		date: '2015-03-02 10:32:13',
-		content: '30분뒤 같이 소주한잔 하실분 연락주세요'
-	}];
-    var db = window.sqlitePlugin.openDatabase("epaper.db","1.0", "EPaper", 5000000);
-    db.transaction(function(tx) {
-    	tx.executeSql('DROP TABLE IF EXISTS input_box',[], function(tx,res){
-    		tx.executeSql('CREATE TABLE IF NOT EXISTS input_box (id integer primary key, date text, phone_no text, content text)',[], function(tx, res){
-    			for(var i=0; i<inputs.length; i++){
-    				tx.executeSql('INSERT INTO input_box(date, phone_no, content) VALUES (?, ?, ?)', [inputs[i].date, inputs[i].phoneNo, inputs[i].content]);
-    			}
-    		});
-    	});
+    $cordovaSQLite.execute(db, inputbox_drop, []).then(function(res){
+    	console.log('input_box :: drop');
     });
+    $cordovaSQLite.execute(db, inputbox_create, []).then(function(res){
+    	console.log('input_box :: create');
+        $cordovaSQLite.insertCollection(db, inputbox_insert, messages).then(function(res){
+        	console.log('input_box :: inserted');
+        	$cordovaSQLite.execute(db, inputbox_select, []).then(function(res){
+        		$rootScope.messages = [];
+        		for(var i=0; i<res.rows.length; i++){
+        			$rootScope.messages.push(res.rows.item(i));
+        		}
+        		console.log('input_box :: selected');
+        	});	
+        });       
+    });
+    
+    $rootScope.InputBox = {
+    	remove: function(message){
+    		var query = 'DELETE FROM input_box where id=?';
+    		$cordovaSQLite.execute(db, query, [message.id]).then(function(res){
+    			$rootScope.messages.splice(messages.indexOf(message), 1);
+    			console.log('input_box :: delete');
+    		});
+    	}
+    };
+/*
+	var query = 'INSERT INTO input_box(date, phone_no, content) VALUES (?, ?, ?)';
+	for(var i=0; i<inputs.length; i++){
+		DbAccess.executeQuery(query, [inputs[i].date, inputs[i].phoneNo, inputs[i].content], DbAccess.DefaultErrorHandler);
+	}
     
 	var sendlist = [{
 		date: '2015-03-01 14:22:11',
@@ -58,25 +74,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 		paper_cnt: 100,
 		content: '신림,봉청,낙성대역 근처 27세여자 경리직 구합니다. 3년경력 있고, 엑셀/파워포인트 아주 잘 다룹니다.'
 	}];
-	db.transaction(function(tx) {
-		tx.executeSql('DROP TABLE IF EXISTS send_box',[], function(tx, res){
-			tx.executeSql('CREATE TABLE IF NOT EXISTS send_box (id integer primary key, date text, sex text, age1 integer, age2 integer,'
-					+ 'age3 integer, age4 integer, age5 integer, age6 integer, distance integer, paper_cnt integer, content text)',[], function(tx, res){
-						for(var i=0; i<sendlist.length; i++){
-							tx.executeSql('INSERT INTO send_box (date, sex, age1, age2, age3, age4, age5, age6, distance, paper_cnt, content) ' 
-									+ 'values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
-									, [sendlist[i].date, sendlist[i].sex, sendlist[i].age1, sendlist[i].age2, sendlist[i].age3, sendlist[i].age4, sendlist[i].age5, sendlist[i].age6
-									   , sendlist[i].distance, sendlist[i].paper_cnt, sendlist[i].content]);
-						}
-					});			
-		});
-	});
-    db.close(function(){
-    	console.log('database closed');
-    	}, function(err){
-    		console.error(err);
-    	});
-	
+	query = 'INSERT INTO send_box (date, sex, age1, age2, age3, age4, age5, age6, distance, paper_cnt, content) '
+		+ 'values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+	for(var i=0; i<sendlist.length; i++){
+		var args = [sendlist[i].date, sendlist[i].sex, sendlist[i].age1, sendlist[i].age2, sendlist[i].age3, sendlist[i].age4, sendlist[i].age5, sendlist[i].age6
+		            , sendlist[i].distance, sendlist[i].paper_cnt, sendlist[i].content];
+		DbAccess.executeQuery(query, args, DbAccess.DefaultErrorHandler);
+	}
+*/	
     var watchID = navigator.geolocation.watchPosition(onSuccess, onError, { timeout: 30000 });
     if(device.platform.toUpperCase() == 'ANDROID'){
       window.plugins.pushNotification.register(successHandler,errorHandler, {

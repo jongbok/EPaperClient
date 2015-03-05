@@ -1,14 +1,15 @@
 angular.module('starter.controllers', [])
 
-.controller('HomeCtrl', function($scope, $rootScope, Messages) {
-	var db = window.sqlitePlugin.openDatabase("epaper.db","1.0", "EPaper", 5000000);
-	$scope.messages = Messages.all();
+.controller('HomeCtrl', function($scope, $rootScope) {
+	$scope.init = function(){
+//		$scope.messages = Messages.all();
+	};
 	$scope.remove = function(message){
-		Messages.remove(message);
+		$rootScope.InputBox.remove(message);
 	};
 	$scope.reject = function(message){
-		Messages.reject(message);
-		alert(message.phoneNo + '는 거부되었습니다.');
+		$rootScope.InputBox.remove(message);
+		alert(message.phone_no + '는 거부되었습니다.');
 	};
 })
 
