@@ -1,0 +1,30 @@
+<!--
+Create tabs with an icon and label, using the tabs-positive style.
+Each tab's child <ion-nav-view> directive will have its own
+navigation history that also transitions its views in and out.
+-->
+<ion-tabs class="tabs-icon-top tabs-color-active-positive">
+
+
+  <!-- 메인 -->
+  <ion-tab title="홈" icon-off="ion-ios7-home-outline" icon-on="ion-ios7-home" href="#/tab/home">
+    <ion-nav-view name="tab-home"></ion-nav-view>
+  </ion-tab>
+
+  <!-- 전단지 발송 -->
+  <ion-tab title="발송" icon-off="ion-ios7-chatboxes-outline" icon-on="ion-ios7-chatboxes" href="#/tab/send">
+    <ion-nav-view name="tab-send"></ion-nav-view>
+  </ion-tab>
+
+  <!-- 발송목록 -->
+  <ion-tab title="발송목록" icon-off="ion-ios7-paper-outline" icon-on="ion-ios7-paper" href="#/tab/sendlist">
+    <ion-nav-view name="tab-sendlist"></ion-nav-view>
+  </ion-tab>
+
+  <!-- 설정 -->
+  <ion-tab title="설정" icon-off="ion-ios7-gear-outline" icon-on="ion-ios7-gear" href="#/tab/setting">
+    <ion-nav-view name="tab-setting"></ion-nav-view>
+  </ion-tab>
+
+
+</ion-tabs>
