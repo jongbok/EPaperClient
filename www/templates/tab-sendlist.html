@@ -1,21 +1,21 @@
 <ion-view view-title="발송목록">
   <ion-content>
-    <div class="list card" ng-repeat="message in messages" >
+    <div class="list card" ng-repeat="sendMsg in sendlist" >
       <div class="item item-divider">
       	<div class="row" >
-      		<div class="col"><h2>{{message.date}}</h2></div>
+      		<div class="col-80" style="text-align:left; margin-top:10px;" >{{sendMsg.date}}</div>
       		<div class="col" style="text-align:right;">
-      			<button class="button button-small icon-left ion-trash-a button button-assertive" ng-click="remove(message)" >삭제</button>
+      			<button class="button button-small icon-left ion-trash-a button button-assertive" ng-click="remove(sendMsg)" >삭제</button>
       		</div>
       	</div>
       </div>
       <div class="item item-body">
         <div>
-        	<p>성별: {{message.sex}}</p>
-        	<p>나이: <span ng-repeat="age in message.ages" >{{age}},</span></p>
-        	<p>내위치로부터 거리: {{message.distance}}</p>
-	        <p>발송건수: {{message.count | number}} 장</p>
-	        <p>{{message.content}}</p>
+        	<p>성별: {{sendMsg.fmt_sex}}</p>
+        	<p>나이: {{sendMsg.fmt_age}}</p>
+        	<p>내위치로부터 거리: {{sendMsg.fmt_distance}}</p>
+	        <p>발송건수: {{sendMsg.paper_cnt | number}} 장</p>
+	        <p>{{sendMsg.content}}</p>
         </div>
       </div>
     </div>  

@@ -1,9 +1,6 @@
 angular.module('starter.controllers', [])
 
 .controller('HomeCtrl', function($scope, $rootScope) {
-	$scope.init = function(){
-//		$scope.messages = Messages.all();
-	};
 	$scope.remove = function(message){
 		$rootScope.InputBox.remove(message);
 	};
@@ -13,7 +10,7 @@ angular.module('starter.controllers', [])
 	};
 })
 
-.controller('SendCtrl', function($scope, $ionicModal, SendSvc){
+.controller('SendCtrl', function($scope, $filter, $rootScope, $ionicModal){
 	
 	$ionicModal.fromTemplateUrl('templates/modal-shop.html', {
 		scope : $scope
@@ -23,14 +20,36 @@ angular.module('starter.controllers', [])
 	$scope.close = function(){
 		$scope.modal.hide();
 	};
+	
+	var defaultObj = {
+			date: '2015-03-01 14:22:11',
+			sex: 'A',
+			age1: 1,
+			age2: 1,
+			age3: 1,
+			age4: 1,
+			age5: 1,
+			age6: 1,
+			distance: 0,
+			paper_cnt: 10,
+			content: ''
+	};
+	
+	$scope.init = function(){
+		var msg = angular.copy(defaultObj);
+		msg.date = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+		msg.paper_cnt = angular.copy($rootScope.max_count);
+		$scope.sendMsg = msg;
+	};
 
-	$scope.message = SendSvc.init();
-	$scope.max = $scope.message.count;
 	$scope.send = function(message){
 		console.log(message);
-		SendSvc.send(message);
+		$rootScope.SendBox.insert(message);
 		alert('발송되었습니다.');
-		$scope.message = SendSvc.init();
+		var msg = angular.copy(defaultObj);
+		msg.date = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
+		msg.paper_cnt = angular.copy($rootScope.max_count);
+		$scope.sendMsg = msg;
 	};
 	$scope.buy = function(productId){
   	  inappbilling.buy(function(resultBuy) {
@@ -47,25 +66,11 @@ angular.module('starter.controllers', [])
 		});
 	};
 	
-    function successHandler (result) {
-        var strResult = "";
-        if(typeof result === 'object') {
-            strResult = JSON.stringify(result);
-        } else {
-            strResult = result;
-        }
-        alert("SUCCESS: \r\n"+strResult );
-    }
-
-    function errorHandler (error) {
-        alert("ERROR: \r\n"+error );
-    }
 })
 
-.controller('SendListCtrl', function($scope, SendSvc){
-	$scope.messages = SendSvc.all();
+.controller('SendListCtrl', function($scope, $rootScope){
 	$scope.remove = function(message){
-		SendSvc.remove(message);
+		$rootScope.SendBox.remove(message);
 	};
 })
 

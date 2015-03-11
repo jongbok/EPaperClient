@@ -1,12 +1,12 @@
 <ion-view view-title="발송">
-<form name="sendForm" novalidate >
+<form name="sendForm" novalidate ng-init="init()" >
   <ion-content>
     <ion-list>
       <ion-item>
       	<label class="item item-input item-select">
       		<div class="input-label">* 성별</div>
-	      	<select name="sex" ng-model="message.sex" >
-	      		<option value="A" selected >전체</option>
+	      	<select name="sex" ng-model="sendMsg.sex" >
+	      		<option value="A" >전체</option>
 	      		<option value="M" >남자</option>
 	      		<option value="F" >여자</option>
 	      	</select>
@@ -14,16 +14,31 @@
       </ion-item>
       <ion-item>
       	<span class="input-label">* 나이</span>
-      	<ul class="list" ng-repeat="age in message.ages" >
+      	<ul class="list">
       		<li>
-      			<ion-checkbox ng-model="age.checked" >{{age.name}}</ion-checkbox>
+      			<ion-checkbox ng-model="sendMsg.age1" ng-true-value="1" ng-false-value="0" >10대</ion-checkbox>
+      		</li> 
+      		<li>
+      			<ion-checkbox ng-model="sendMsg.age2" ng-true-value="1" ng-false-value="0" >20대</ion-checkbox>
+      		</li> 
+      		<li>
+      			<ion-checkbox ng-model="sendMsg.age3" ng-true-value="1" ng-false-value="0" >30대</ion-checkbox>
+      		</li> 
+      		<li>
+      			<ion-checkbox ng-model="sendMsg.age4" ng-true-value="1" ng-false-value="0" >40대</ion-checkbox>
+      		</li> 
+      		<li>
+      			<ion-checkbox ng-model="sendMsg.age5" ng-true-value="1" ng-false-value="0" >50대</ion-checkbox>
+      		</li> 
+      		<li>
+      			<ion-checkbox ng-model="sendMsg.age6" ng-true-value="1" ng-false-value="0" >60대이상</ion-checkbox>
       		</li> 
       	</ul>
       </ion-item>
       <ion-item>
       	<label class="item item-input item-select">
       		<div class="input-label">* 내위치로부터 거리</div>
-	      	<select name="distance" ng-model="message.distance" >
+	      	<select name="distance" ng-model="sendMsg.distance" >
 	      		<option value="0" selected >전체</option>
 	      		<option value="500" >500M</option>
 	      		<option value="1000" >1KM</option>
@@ -40,7 +55,7 @@
 			<div class="col" >
 				<label class="item item-input item-button">
 				  <span class="input-label" >* 발송건수</span>
-				  <input type="number" name="count" min="1" max="{{max}}" placeholder="발송건수를 입력하세요!" required  ng-model="message.count"  />
+				  <input type="number" name="paper_cnt" min="1" max="{{max_count}}" placeholder="발송건수를 입력하세요!" required  ng-model="sendMsg.paper_cnt"  />
 				</label>
 			</div>
 			<div class="col" style="text-align:right;" >
@@ -50,10 +65,10 @@
       </ion-item>
       <ion-item>
       	<span class="input-label" >* 발송내용</span>
-      	<textarea name="content" id="content" placeholder="내용을 입력하세요!" ng-Required="true" ng-model="message.content" ></textarea>
+      	<textarea name="content" id="content" placeholder="내용을 입력하세요!" ng-Required="true" ng-model="sendMsg.content" ></textarea>
       </ion-item>
       <ion-item>
-      	<button ng-disabled="!sendForm.$valid" class="button button-block button-positive" ng-click="send(message)" >발송</button>
+      	<button ng-disabled="!sendForm.$valid" class="button button-block button-positive" ng-click="send(sendMsg)" >발송</button>
       </ion-item>
     </ion-list>
   </ion-content>
