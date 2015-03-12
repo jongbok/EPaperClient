@@ -29,7 +29,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 	                     initInputBox,
 	                     initSendBox,
 	                     function(callback){
-	                    	callback(null, $cordovaPush, $rootScope); 
+	                    	callback(null, $cordovaPush, $rootScope, $http); 
 	                     },
 	                     initNotification,
 	                     function(regId, callback){
@@ -74,14 +74,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 	                    		 console.error('get user:: ' + status);
 	                    		 throw new Error('서버와 연결이 원활하지 않습니다.');
 	                    	 });
+	                     },
+	                     function(user, callback){
+	                    	 $rootScope.user = user;
+	                    	 receiveMessage($http, $rootScope, function(){
+	                    		 callback(null, user);
+	                    	 });
 	                     }
 	            ],
 	            function(err, result){	  
 	    			if(err){ throw err; }
-	    			$rootScope.user = result;
 	    			console.log('loadding success!');
 	    			console.log(JSON.stringify(result));
-	    			$rootScope.user = result;
 	    });
 	    
 		if(typeof inappbilling !== "undefined"){
@@ -118,8 +122,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   // Set up the various states which the app can be in.
   // Each state's controller can be found in controllers.js
   $stateProvider
-
-  // setup an abstract state for the tabs directive
     .state('tab', {
     url: "/tab",
     abstract: true,
@@ -172,11 +174,46 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
 });
 
+
+function receiveMessage($http, $rootScope, callback){
+	 $http({
+		 method: 'GET',
+		 url: $rootScope.server_uri + '/messages/' + $rootScope.user.id,
+		 data: {user_id: $rootScope.user.id},
+		 headers: {'Content-Type': 'application/json; charset=utf-8'}
+	 })
+	 .success(function(data, status, headers, config){
+		 if(!data){
+			 console.error('get message:: response data is null!');
+			 throw new Error('서버로부터 전단지를 가져오는중 오류가 발생하였습니다.');
+		 }
+		 if(data.result && data.result === 'fail'){
+			 console.error('get message:: response fail[' + data.message + ']');
+			 throw new Error(data.message);
+		 }
+		 
+		 console.log('get message::' + JSON.stringify(data));
+		 for(var i=0; i<data.length; i++){
+			 var message = {
+					 date: data[i].create_dt, 
+					 phone_no: data[i].phone_no,
+					 content: data[i].content
+					 };
+			 $rootScope.InputBox.insert(message);
+		 }
+		 callback();
+	 })
+	 .error(function(data, status, headers, config){
+		 console.error('get message:: http error!');
+		 throw new Error('서버로부터 전단지를 가져오는중 오류가 발생하였습니다.');
+	 });	
+}
+
 function initInputBox(db, $rootScope, $cordovaSQLite, callback){
     var query_create = 'CREATE TABLE IF NOT EXISTS input_box (id integer primary key, date text, phone_no text, content text)';
     var query_drop = 'DROP TABLE IF EXISTS input_box';
     var query_insert = 'INSERT INTO input_box(date, phone_no, content) VALUES (?,?,?)';
-    var query_select = 'SELECT * FROM input_box';
+    var query_select = 'SELECT * FROM input_box order by date desc';
     var messages = [
                     ['2015-03-02 09:22:33', '01022223333', '강아지 찾아요~ 요크셔테리 검은색, 빨간색 조끼에 방울 달았습니다. 찾아주시는 분에게 사례하겠습니다.'],
                     ['2015-03-02 10:25:43', '01022224444', '신사시장 입구 오이야채가게에서 지금부터1시간동안만 반짝세일합니다, 쪽파한단500원, 시금치한단600원, 브로컬리2송이 500원 어서들 오세요~'],
@@ -225,6 +262,14 @@ function initInputBox(db, $rootScope, $cordovaSQLite, callback){
     			$rootScope.messages.splice($rootScope.messages.indexOf(message), 1);
     			console.log('input_box :: delete');
     		});
+    	},
+    	insert: function(message){
+    		var query = query_insert;
+    		var args = [message.date, message.phone_no, message.content];
+    		$cordovaSQLite.execute(db, query, [message.id]).then(function(res){
+    			$rootScope.messages.splice(0, 0, message);
+    			console.log('input_box :: insert');
+    		});
     	}
     };	
 }
@@ -235,7 +280,7 @@ function initSendBox(db, $rootScope, $cordovaSQLite, callback){
 	var query_drop = 'DROP TABLE IF EXISTS send_box';
 	var query_insert = 'INSERT INTO send_box (date, sex, age1, age2, age3, age4, age5, age6, distance, paper_cnt, content) '
 						+ 'values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-	var query_select = 'select * from send_box';
+	var query_select = 'select * from send_box order by date desc';
 	var sendlist = [
 	                ['2015-03-01 14:22:11', 'M', '1', '1', '1', '0', '0', '0', '1000', '100', '신림,봉청,낙성대역 근처 27세여자 경리직 구합니다. 3년경력 있고, 엑셀/파워포인트 아주 잘 다룹니다.']
 	                ];
@@ -298,7 +343,7 @@ function initSendBox(db, $rootScope, $cordovaSQLite, callback){
         };		
 }
 
-function initNotification($cordovaPush, $rootScope, callback) {
+function initNotification($cordovaPush, $rootScope, $http, callback) {
 	if (device.platform.toUpperCase() == 'ANDROID') {
 		$cordovaPush.register({
 			'senderID' : '185776228328'
@@ -323,6 +368,9 @@ function initNotification($cordovaPush, $rootScope, callback) {
 					}
 					break;
 				case 'message':
+					receiveMessage($http, $rootScope, function(){
+						console.log('GCM:: message receive!');
+					});
 					console.log('GCM:: message = ' + notification.message + ' msgCount = ' + notification.msgcnt);
 					// TODO 메세지 수신
 					break;

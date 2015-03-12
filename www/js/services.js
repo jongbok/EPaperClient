@@ -1,4 +1,3 @@
-var server_uri = 'https://ec2-54-65-104-219.ap-northeast-1.compute.amazonaws.com';
 
 angular.module('starter.services', [])
 .factory('Setting', function(){

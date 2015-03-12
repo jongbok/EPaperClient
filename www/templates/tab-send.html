@@ -55,7 +55,7 @@
 			<div class="col" >
 				<label class="item item-input item-button">
 				  <span class="input-label" >* 발송건수</span>
-				  <input type="number" name="paper_cnt" min="1" max="{{max_count}}" placeholder="발송건수를 입력하세요!" required  ng-model="sendMsg.paper_cnt"  />
+				  <input type="number" name="paper_cnt" min="1" max="{{user.paper_coin}}" placeholder="발송건수를 입력하세요!" required  ng-model="sendMsg.paper_cnt"  />
 				</label>
 			</div>
 			<div class="col" style="text-align:right;" >
@@ -65,7 +65,7 @@
       </ion-item>
       <ion-item>
       	<span class="input-label" >* 발송내용</span>
-      	<textarea name="content" id="content" placeholder="내용을 입력하세요!" ng-Required="true" ng-model="sendMsg.content" ></textarea>
+      	<textarea name="content" id="content" placeholder="내용을 입력하세요!" ng-Required="true" ngMaxlength="3000" ng-model="sendMsg.content" ></textarea>
       </ion-item>
       <ion-item>
       	<button ng-disabled="!sendForm.$valid" class="button button-block button-positive" ng-click="send(sendMsg)" >발송</button>

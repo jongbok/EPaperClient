@@ -5,7 +5,7 @@
       <ion-item>
       	<label class="item item-input item-select">
       		<div class="input-label">성별</div>
-	      	<select name="sex" ng-model="setting.sex" ng-change="modify(setting)" >
+	      	<select name="sex" ng-model="user.sex" ng-change="modify(setting)" >
 	      		<option value="A" >전체</option>
 	      		<option value="M" >남자</option>
 	      		<option value="F" >여자</option>
@@ -15,7 +15,7 @@
       <ion-item>
       	<label class="item item-input item-select">
       		<div class="input-label">나이</div>
-      		<select name="age" ng-model="setting.age" ng-change="modify(setting)" >
+      		<select name="age" ng-model="user.age" ng-change="modify(setting)" >
       			<option value="0" >전체</option>
       			<option value="10" >10대</option>
       			<option value="20" >20대</option>
@@ -28,7 +28,7 @@
       </ion-item>
       <ion-item>
       	<div class="row" >
-      		<div class="col" >수신거부: {{setting.reject}}건</div>
+      		<div class="col" >수신거부: {{user.reject_cnt}}건</div>
       		<div class="col" >
       			<button class="button button-small button-positive" ng-click="resetReject(setting)" >초기화</button>
       		</div>
