@@ -7,7 +7,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngCordova'])
 
-.run(function($ionicPlatform, $rootScope, $http, $cordovaSQLite, $cordovaGeolocation, $cordovaPush) {
+.run(function($ionicPlatform, $rootScope, $http, $cordovaSQLite, $cordovaGeolocation, $cordovaPush, $cordovaToast, $ionicLoading) {
 	$rootScope.server_uri = 'https://ec2-54-65-104-219.ap-northeast-1.compute.amazonaws.com';
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -21,96 +21,102 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     }
     
     var db = $cordovaSQLite.openDB({ name: "epage.db", bgType: 1 });
-    try{
-	    async.waterfall([
-	                     function(callback){
-	                    	 callback(null, db, $rootScope, $cordovaSQLite);
-	                     },
-	                     initInputBox,
-	                     initSendBox,
-	                     function(callback){
-	                    	callback(null, $cordovaPush, $rootScope, $http); 
-	                     },
-	                     initNotification,
-	                     function(regId, callback){
-	                    	 var user = {registration_id: regId};
-	                    	 var telephoneNumber = cordova.require("cordova/plugin/telephonenumber");
-	                    	 telephoneNumber.get(function(phone_no) {
-	                    		 user.phone_no = phone_no;
-	                    		 callback(null, user);
-	                    	 },
-	                    	 function(){
-	                    		 alert('해당기기의 전화번호를 가져올 수 없습니다.\n 전화번호가 없는 기기에서는 전단지를 발송할 수 없습니다.');
-	                    		 callback(null, user);
-	                    	 });
-	                     },
-	                     function(user, callback){
-	                    	 $cordovaGeolocation.getCurrentPosition({timeout: 20000, enableHighAccuracy: true, maximumAge:0}).then(
-	                    			 function(position) {
-	                    				 user.latitude = position.coords.latitude;
-	                    				 user.longitude = position.coords.longitude;
-	                    				 console.log('Geolocation::lat=' + user.latitude + ',long=' + user.longitude);
-	                    				 callback(null, user);
-	                    			 },
-	                    			 function(err){
-	                    				 alert('위치정보를 가져올 수 없어 사용이 제한될 수 있습니다. 위치정보를 사용할 수 있도록 설정해 주세요!');
-	                    				 console.error('Geolocation::' + JSON.stringify(err));
-	                    			 });
-	                     },
-	                     function(user, callback){
-	                    	 $http({
-	                    		 method: 'POST',
-	                    		 url: $rootScope.server_uri + '/users',
-	                    		 data: user,
-	                    		 headers: {'Content-Type': 'application/json; charset=utf-8'}
-	                    	 })
-	                    	 .success(function(data, status, headers, config){
-	                    		if(!data || (data.result && data.result === 'fail')){
-	                    			throw new Error('사용자정보를 가져오는중 에러가 발생하였습니다.');
-	                    		}
-	                    		callback(null, data);
-	                    	 })
-	                    	 .error(function(data, status, headers, config){
-	                    		 console.error('get user:: ' + status);
-	                    		 throw new Error('서버와 연결이 원활하지 않습니다.');
-	                    	 });
-	                     },
-	                     function(user, callback){
-	                    	 $rootScope.user = user;
-	                    	 receiveMessage($http, $rootScope, function(){
-	                    		 callback(null, user);
-	                    	 });
-	                     }
-	            ],
-	            function(err, result){	  
-	    			if(err){ throw err; }
-	    			console.log('loadding success!');
-	    			console.log(JSON.stringify(result));
-	    });
-	    
-		if(typeof inappbilling !== "undefined"){
-			  inappbilling.init(function(resultInit) {
-		          inappbilling.getPurchases(function(result) {
-		              console.log("PURCHASE RESPONSE -> " + JSON.stringify(result));
-		          }, 
-		          function(errorPurchases) {
-		              console.error("PURCHASE ERROR -> " + errorPurchases);
-		              throw errorPurchases;
-		          });
-		      }, 
-		      function(errorInit) {
-		          console.error("INITIALIZATION ERROR -> " + errorInit);
-		          throw errorInit;
-		      }, 
-		      {showLog: true},
-		      ["paper_coin_50"]);
-		}
-    }catch(e){
-    	alert('초기화중 오류가 발생하였습니다.');
-    	console.error('loadding error!');
-    	console.error(JSON.stringify(e));
-    	navigator.app.exitApp();
-    }
+    async.waterfall([
+                     function(callback){
+                    	 $ionicLoading.show({template : '시스템정보를 확인하는 중입니다...' });
+                    	 callback(null, db, $rootScope, $cordovaSQLite);
+                     },
+                     initInputBox,
+                     initSendBox,
+                     function(callback){
+                    	callback(null, $cordovaPush, $rootScope, $http, $cordovaToast); 
+                     },
+                     initNotification,
+                     function(regId, callback){
+                    	 var user = {registration_id: regId};
+                    	 var telephoneNumber = cordova.require("cordova/plugin/telephonenumber");
+                    	 telephoneNumber.get(function(phone_no) {
+                    		 user.phone_no = phone_no;
+                    		 callback(null, user);
+                    	 },
+                    	 function(){
+                    		 var msg = '해당기기의 전화번호를 가져올 수 없습니다.\n 전화번호가 없는 기기에서는 전단지를 발송할 수 없습니다.';
+                    		 console.error(msg);
+                    		 $cordovaToast.showLongCenter(msg);
+                    		 callback(null, user);
+                    	 });
+                     },
+                     function(user, callback){
+                    	 $cordovaGeolocation.getCurrentPosition({timeout: 10000, enableHighAccuracy: true, maximumAge:1000 * 60 * 5}).then(
+                    			 function(position) {
+                    				 user.latitude = position.coords.latitude;
+                    				 user.longitude = position.coords.longitude;
+                    				 console.log('Geolocation::lat=' + user.latitude + ',long=' + user.longitude);
+                    				 callback(null, user);
+                    			 },
+                    			 function(err){
+                    				 var msg = '위치정보를 가져올 수 없어 사용이 제한될 수 있습니다.\n위치정보를 사용할 수 있도록 설정해 주세요!';
+                    				 console.error(msg);
+                    				 $cordovaToast.showLongCenter(msg);
+                    				 callback(null, user);
+                    			 });
+                     },
+                     function(user, callback){
+                    	 $http({
+                    		 method: 'POST',
+                    		 url: $rootScope.server_uri + '/users',
+                    		 data: user,
+                    		 headers: {'Content-Type': 'application/json; charset=utf-8'}
+                    	 })
+                    	 .success(function(data, status, headers, config){
+                    		if(!data || (data.result && data.result === 'fail')){
+                    			var err = new Error('사용자정보를 가져오는중 에러가 발생하였습니다.');
+                    			callback(err);
+                    			return;
+                    		}
+                    		callback(null, data);
+                    	 })
+                    	 .error(function(data, status, headers, config){
+                    		 console.error('get user:: ' + status);
+                    		 var err = new Error('서버와 연결이 원활하지 않습니다.');
+                    		 callback(err);
+                    	 });
+                     },
+                     function(user, callback){
+                    	 $rootScope.user = user;
+                    	 receiveMessage($http, $rootScope, function(){
+                    		 callback(null, user);
+                    	 });
+                     }
+            ],
+            function(err, result){
+    			$ionicLoading.hide();
+    			if(err){
+    				console.error('init error', err);
+    				alert('오류가 발생하여 사용할 수 없습니다.');
+    				navigator.app.exitApp();
+    			}else{
+    				console.log('loadding success!');
+    			}
+    });
+    
+	if(typeof inappbilling !== "undefined"){
+		  inappbilling.init(function(resultInit) {
+	          inappbilling.getPurchases(function(result) {
+	              console.log("PURCHASE RESPONSE -> " + JSON.stringify(result));
+	          }, 
+	          function(errorPurchases) {
+	              console.error("PURCHASE ERROR -> " + errorPurchases);
+	              throw errorPurchases;
+	          });
+	      }, 
+	      function(errorInit) {
+	          console.error("INITIALIZATION ERROR -> " + errorInit);
+	          throw errorInit;
+	      }, 
+	      {showLog: true},
+	      ["paper_coin_50"]);
+	}
     
   });
 })
@@ -214,28 +220,11 @@ function initInputBox(db, $rootScope, $cordovaSQLite, callback){
     var query_drop = 'DROP TABLE IF EXISTS input_box';
     var query_insert = 'INSERT INTO input_box(date, phone_no, content) VALUES (?,?,?)';
     var query_select = 'SELECT * FROM input_box order by date desc';
-    var messages = [
-                    ['2015-03-02 09:22:33', '01022223333', '강아지 찾아요~ 요크셔테리 검은색, 빨간색 조끼에 방울 달았습니다. 찾아주시는 분에게 사례하겠습니다.'],
-                    ['2015-03-02 10:25:43', '01022224444', '신사시장 입구 오이야채가게에서 지금부터1시간동안만 반짝세일합니다, 쪽파한단500원, 시금치한단600원, 브로컬리2송이 500원 어서들 오세요~'],
-                    ['2015-03-02 10:32:13', '01022225555', '30분뒤 같이 소주한잔 하실분 연락주세요']
-                  ];
     
     async.waterfall([
         function(callback){
-        	$cordovaSQLite.execute(db, query_drop, []).then(function(res){
-        		console.log('input_box :: drop');
-        		callback(null);
-        	});
-        },
-        function(callback){
         	$cordovaSQLite.execute(db, query_create, []).then(function(res){
         		console.log('input_box :: create');
-        		callback(null);
-        	});
-        },
-        function(callback){
-        	$cordovaSQLite.insertCollection(db, query_insert, messages).then(function(res){
-        		console.log('input_box :: inserted');
         		callback(null);
         	});
         },
@@ -260,15 +249,16 @@ function initInputBox(db, $rootScope, $cordovaSQLite, callback){
     		var query = 'DELETE FROM input_box where id=?';
     		$cordovaSQLite.execute(db, query, [message.id]).then(function(res){
     			$rootScope.messages.splice($rootScope.messages.indexOf(message), 1);
-    			console.log('input_box :: delete');
+    			console.log('input_box :: delete[id:' + message.id + ']');
     		});
     	},
     	insert: function(message){
     		var query = query_insert;
     		var args = [message.date, message.phone_no, message.content];
-    		$cordovaSQLite.execute(db, query, [message.id]).then(function(res){
+    		$cordovaSQLite.execute(db, query, args).then(function(res){
+    			message.id = res.insertId;
     			$rootScope.messages.splice(0, 0, message);
-    			console.log('input_box :: insert');
+    			console.log('input_box :: insert ' + JSON.stringify(message));
     		});
     	}
     };	
@@ -281,26 +271,11 @@ function initSendBox(db, $rootScope, $cordovaSQLite, callback){
 	var query_insert = 'INSERT INTO send_box (date, sex, age1, age2, age3, age4, age5, age6, distance, paper_cnt, content) '
 						+ 'values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 	var query_select = 'select * from send_box order by date desc';
-	var sendlist = [
-	                ['2015-03-01 14:22:11', 'M', '1', '1', '1', '0', '0', '0', '1000', '100', '신림,봉청,낙성대역 근처 27세여자 경리직 구합니다. 3년경력 있고, 엑셀/파워포인트 아주 잘 다룹니다.']
-	                ];
 
 	async.waterfall([
 	    function(callback){
-	    	$cordovaSQLite.execute(db, query_drop, []).then(function(res){
-	    		console.log('send_box :: drop');
-	    		callback(null);
-	    	});
-	    },
-	    function(callback){
 	    	$cordovaSQLite.execute(db, query_create, []).then(function(res){
 	    		console.log('send_box :: create');
-	    		callback(null);
-	    	});
-	    },
-	    function(callback){
-	    	$cordovaSQLite.insertCollection(db, query_insert, sendlist).then(function(res){
-	    		console.log('send_box :: inserted');
 	    		callback(null);
 	    	});
 	    },
@@ -335,15 +310,14 @@ function initSendBox(db, $rootScope, $cordovaSQLite, callback){
         		            , message.age5, message.age6, message.distance, message.paper_cnt, message.content];
         		$cordovaSQLite.execute(db, query_insert, args).then(function(res){
         			message.id = res.insertId;
-        			$rootScope.sendlist.push(formatSendBox(message));
+        			$rootScope.sendlist.splice(0, 0, formatSendBox(message));
         			console.log('send_box :: insert>' + JSON.stringify(message));
-        			console.log('send_box :: insert>' + message.id);
         		});
         	}
         };		
 }
 
-function initNotification($cordovaPush, $rootScope, $http, callback) {
+function initNotification($cordovaPush, $rootScope, $http, $cordovaToast, callback) {
 	if (device.platform.toUpperCase() == 'ANDROID') {
 		$cordovaPush.register({
 			'senderID' : '185776228328'
@@ -370,6 +344,7 @@ function initNotification($cordovaPush, $rootScope, $http, callback) {
 				case 'message':
 					receiveMessage($http, $rootScope, function(){
 						console.log('GCM:: message receive!');
+						$cordovaToast.showLongCenter('새로운 전단지가 도착했습니다!');
 					});
 					console.log('GCM:: message = ' + notification.message + ' msgCount = ' + notification.msgcnt);
 					// TODO 메세지 수신

@@ -37,25 +37,24 @@
       </ion-item>
       <ion-item>
       	<label class="item item-input item-select">
-      		<div class="input-label">* 내위치로부터 거리</div>
+      		<div class="input-label">내위치로부터</div>
 	      	<select name="distance" ng-model="sendMsg.distance" >
-	      		<option value="0" selected >전체</option>
+	      		<option value="0" selected >가능한 모든사람들에게</option>
 	      		<option value="500" >500M</option>
 	      		<option value="1000" >1KM</option>
 	      		<option value="3000" >3KM</option>
 	      		<option value="5000" >5KM</option>
 	      		<option value="10000" >10KM</option>
 	      		<option value="30000" >30KM</option>
-	      		<option value="50000" >50KM</option>
+	      		<option value="50000" >50KM</option>  
 	      	</select>
       	</label>
       </ion-item>
       <ion-item>
       	<div class="row" >
 			<div class="col" >
-				<label class="item item-input item-button">
-				  <span class="input-label" >* 발송건수</span>
-				  <input type="number" name="paper_cnt" min="1" max="{{user.paper_coin}}" placeholder="발송건수를 입력하세요!" required  ng-model="sendMsg.paper_cnt"  />
+				<label class="item item-input item-input-wrapper">
+				  <input type="number" name="paper_cnt" min="1" max="{{user.paper_coin}}" placeholder="발송건수를 입력하세요!" required  ng-blur="checkPaperCnt(sendMsg)" ng-model="sendMsg.paper_cnt"  />건 발송
 				</label>
 			</div>
 			<div class="col" style="text-align:right;" >
@@ -64,13 +63,15 @@
       	</div>
       </ion-item>
       <ion-item>
-      	<span class="input-label" >* 발송내용</span>
-      	<textarea name="content" id="content" placeholder="내용을 입력하세요!" ng-Required="true" ngMaxlength="3000" ng-model="sendMsg.content" ></textarea>
-      </ion-item>
-      <ion-item>
-      	<button ng-disabled="!sendForm.$valid" class="button button-block button-positive" ng-click="send(sendMsg)" >발송</button>
+      	<label class="item item-input item-input-wrapper">
+      		<textarea name="content" id="content" placeholder="내용을 입력하세요!" rows="10" ng-Required="true" ngMaxlength="2000" ng-blur="checkContent(sendMsg)" ng-model="sendMsg.content" ></textarea>
+      	</label>
       </ion-item>
     </ion-list>
+  <br/><br/><br/>
   </ion-content>
+	<div class="bar bar-footer" style="height:60px;" >
+		<button ng-disabled="!sendForm.$valid" class="button button-block button-positive icon-left ion-arrow-graph-up-right" ng-click="send(sendMsg)" style="height:50px; font-size:10pt;" >발송</button>
+	</div>  
 </form>
 </ion-view>
