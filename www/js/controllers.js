@@ -1,41 +1,56 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['ngDraggable'])
 
-.controller('HomeCtrl', function($scope, $rootScope, $http) {
-	$scope.remove = function(message){
-		$rootScope.InputBox.remove(message);
+.controller('HomeCtrl', function($scope, $rootScope, $http, $window) {
+	$scope.phoneCall = function(message){
+		document.location.href = 'tel:' + message.phone_no;
+		console.log('hold obj::' + JSON.stringify(message));
 	};
 	
-	$scope.reject = function(message){
-		 $http({
-			 method: 'POST',
-			 url: $rootScope.server_uri + '/users/' + $rootScope.user.id + '/reject',
-			 data: {
-				 	id: $rootScope.user.id,
-				 	phone_no: $rootScope.user.phone_no
-			 },
-			 headers: {'Content-Type': 'application/json; charset=utf-8'}
-		 })
-		 .success(function(data, status, headers, config){
-			 if(!data){
-				 console.error('reject:: response data is null!');
+	$scope.onDropComplete = function(message, event){
+		var width = $window.innerWidth;
+		var active = Math.round(width * 10 / 100);
+		var left = active;
+		var right = width - active;
+		var endX = event.x;
+		if(endX < left){
+			var b = confirm('메세지를 보낸 사용자를 차단하시겠습니까?');
+			if(!b){
+				return;
+			}
+			 $http({
+				 method: 'POST',
+				 url: $rootScope.server_uri + '/users/' + $rootScope.user.id + '/reject',
+				 data: {
+					 	id: $rootScope.user.id,
+					 	phone_no: $rootScope.user.phone_no
+				 },
+				 headers: {'Content-Type': 'application/json; charset=utf-8'}
+			 })
+			 .success(function(data, status, headers, config){
+				 if(!data){
+					 console.error('reject:: response data is null!');
+					 alert('거부처리 하는중 에러가 발생하였습니다.');
+					 return;
+				 }
+				 if(data.result && data.result === 'fail'){
+					 console.error('reject:: response fail[' + data.message + ']');
+					 alert('거부처리 하는중 에러가 발생하였습니다.');
+					 return;
+				 }
+			
+				 $rootScope.InputBox.remove(message);
+				 $rootScope.user.reject_cnt += 1;
+				 console.log('reject:: success!');
+				 alert('거부처리 되었습니다.');
+			 })
+			 .error(function(data, status, headers, config){
+				 console.error('send message:: http error![status:' + status + ']');
 				 alert('거부처리 하는중 에러가 발생하였습니다.');
-				 return;
-			 }
-			 if(data.result && data.result === 'fail'){
-				 console.error('reject:: response fail[' + data.message + ']');
-				 alert('거부처리 하는중 에러가 발생하였습니다.');
-				 return;
-			 }
-		
-			 $rootScope.InputBox.remove(message);
-			 $rootScope.user.reject_cnt += 1;
-			 console.log('reject:: success!');
-			 alert('거부처리 되었습니다.');
-		 })
-		 .error(function(data, status, headers, config){
-			 console.error('send message:: http error![status:' + status + ']');
-			 alert('거부처리 하는중 에러가 발생하였습니다.');
-		 });
+			 });			
+		}
+		if(endX > right){
+			$rootScope.InputBox.remove(message);
+		}
 	};
 })
 
@@ -232,9 +247,17 @@ angular.module('starter.controllers', [])
 	
 })
 
-.controller('SendListCtrl', function($scope, $rootScope){
-	$scope.remove = function(message){
-		$rootScope.SendBox.remove(message);
+.controller('SendListCtrl', function($scope, $rootScope, $window){
+	$scope.onDropComplete = function(message, event){
+		var width = $window.innerWidth;
+		var active = Math.round(width * 10 / 100);
+		var left = active;
+		var right = width - active;
+		var endX = event.x;
+		
+		if(endX < left || endX > right){
+			$rootScope.SendBox.remove(message);
+		}
 	};
 })
 

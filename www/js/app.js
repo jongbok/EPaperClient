@@ -23,7 +23,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     var db = $cordovaSQLite.openDB({ name: "epage.db", bgType: 1 });
     async.waterfall([
                      function(callback){
-                    	 $ionicLoading.show({template : '시스템정보를 확인하는 중입니다...' });
+                    	 $ionicLoading.show({template : '<ion-spinner icon="bubbles" ></ion-spinner>시스템정보를 확인하는 중입니다...', animation: 'fade-in',  noBackdrop: false});
                     	 callback(null, db, $rootScope, $cordovaSQLite);
                      },
                      initInputBox,
@@ -47,7 +47,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
                     	 });
                      },
                      function(user, callback){
-                    	 $cordovaGeolocation.getCurrentPosition({timeout: 10000, enableHighAccuracy: true, maximumAge:1000 * 60 * 5}).then(
+                    	 $cordovaGeolocation.getCurrentPosition({timeout: 10000, enableHighAccuracy: true, maximumAge:1000*60*5}).then(
                     			 function(position) {
                     				 user.latitude = position.coords.latitude;
                     				 user.longitude = position.coords.longitude;

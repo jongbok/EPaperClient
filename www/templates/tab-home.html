@@ -1,22 +1,12 @@
-<ion-view view-title="받은전단지" >
+<ion-view view-title="받은전단지" ng-drop="true" ng-drop-success="onDropComplete($data,$event)" >
   <ion-content class="padding" >
-    <div class="list card" ng-repeat="message in messages" class="item-remove-animate" >
-      <div class="item item-divider">
-      	<div class="row" >
-      		<div class="col-70" style="text-align:left; margin-top:10px;">{{message.date}}</div>
-      		<div class="col" style="text-align:right;">
-      			<a href="tel:{{message.phone_no}}" class="button button-small icon-left ion-ios7-telephone button button button-balanced">전화</a>
-      			<button class="button button-small icon-left ion-trash-a button button-assertive" ng-click="remove(message)" >삭제</button>
-      			<button class="button button-small icon-left ion-thumbsdown button button-dark" ng-click="reject(message)">거부</button>
-      		</div>
-      	</div>
-      	
-      </div>
+    <div class="list card" ng-repeat="message in messages" ng-drag="true" ng-drag-data="message" ng-center-anchor="true" >
+      <div class="item item-divider" on-hold="phoneCall(message)">{{message.date}}</div>
       <div class="item item-body">
         <div>
           {{message.content}}
         </div>
       </div>
-    </div>  
+	</div>
   </ion-content>
 </ion-view>
