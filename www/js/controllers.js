@@ -1,6 +1,6 @@
 angular.module('starter.controllers', ['ngDraggable'])
 
-.controller('HomeCtrl', function($scope, $rootScope, $http, $window) {
+.controller('HomeCtrl', function($scope, $rootScope, $http, $window, epaperConfig) {
 	$scope.phoneCall = function(message){
 		document.location.href = 'tel:' + message.phone_no;
 		console.log('hold obj::' + JSON.stringify(message));
@@ -13,18 +13,23 @@ angular.module('starter.controllers', ['ngDraggable'])
 		var right = width - active;
 		var endX = event.x;
 		if(endX < left){
+			if(message.phone_no === epaperConfig.admin_no){
+				alert('운영자가 보낸 메세지는 차단할 수 없습니다.');
+				return;
+			}
+			
 			var b = confirm('메세지를 보낸 사용자를 차단하시겠습니까?');
 			if(!b){
 				return;
 			}
 			 $http({
 				 method: 'POST',
-				 url: $rootScope.server_uri + '/users/' + $rootScope.user.id + '/reject',
+				 url: epaperConfig.server_uri + '/users/' + $rootScope.user.id + '/reject',
 				 data: {
 					 	id: $rootScope.user.id,
 					 	phone_no: $rootScope.user.phone_no
 				 },
-				 headers: {'Content-Type': 'application/json; charset=utf-8'}
+				 headers: epaperConfig.getHttpHeader()
 			 })
 			 .success(function(data, status, headers, config){
 				 if(!data){
@@ -54,7 +59,7 @@ angular.module('starter.controllers', ['ngDraggable'])
 	};
 })
 
-.controller('SendCtrl', function($scope, $filter, $rootScope, $ionicModal, $ionicLoading, $http){
+.controller('SendCtrl', function($scope, $filter, $rootScope, $ionicModal, $ionicLoading, $http, epaperConfig){
 	
 	$ionicModal.fromTemplateUrl('templates/modal-shop.html', {
 		scope : $scope
@@ -110,10 +115,19 @@ angular.module('starter.controllers', ['ngDraggable'])
 	};
 
 	$scope.send = function(message){
-		$ionicLoading.show({template : '전단지를 발송중 입니다...' });
+		if(!$rootScope.user || !$rootScope.user.id){
+			alert('사용자정보가 존재하지 않습니다. 재설치 후 사용 바랍니다.');
+			return;
+		}
+		if(!$rootScope.user.phone_no || $rootScope.user.phone_no.length < 4){
+			alert('전화번호를 알 수 없는 기기에서는 메세지를 발송 할 수 없습니다.');
+			return;
+		}
+		
+		$ionicLoading.show({template : '<i class="ion-loading-c"></i>전단지를 발송중 입니다...' });
 		 $http({
 			 method: 'POST',
-			 url: $rootScope.server_uri + '/messages',
+			 url: epaperConfig.server_uri + '/messages',
 			 data: {
 				 	user_id: $rootScope.user.id,
 				 	phone_no: $rootScope.user.phone_no,
@@ -128,7 +142,7 @@ angular.module('starter.controllers', ['ngDraggable'])
 				 	paper_cnt: message.paper_cnt,
 				 	content: message.content
 			 },
-			 headers: {'Content-Type': 'application/json; charset=utf-8'}
+			 headers: epaperConfig.getHttpHeader()
 		 })
 		 .success(function(data, status, headers, config){
 			 $ionicLoading.hide();
@@ -164,6 +178,19 @@ angular.module('starter.controllers', ['ngDraggable'])
 	};
 	
 	$scope.buy = function(productId){
+		if(!$rootScope.user || !$rootScope.user.id){
+			alert('사용자정보가 존재하지 않습니다. 재설치 후 사용 바랍니다.');
+			return;
+		}
+		if(!$rootScope.user.phone_no || $rootScope.user.phone_no.length < 4){
+			alert('전화번호를 알 수 없는 기기에서는 메세지를 발송 할 수 없습니다.');
+			return;
+		}		
+		if(typeof inappbilling === "undefined"){
+			alert('결재정보를 가져올 수 없어 구매할 수 없습니다.');
+			return;
+		}
+		
 		var paper_cnt = 0;
         switch(productId){
 	        case 'paper_coin_50':
@@ -194,12 +221,12 @@ angular.module('starter.controllers', ['ngDraggable'])
 
 		 $http({
 			 method: 'POST',
-			 url: $rootScope.server_uri + '/users/' + $rootScope.user.id + '/charge',
+			 url: epaperConfig.server_uri + '/users/' + $rootScope.user.id + '/charge',
 			 data: {
 				 	id: $rootScope.user.id,
 				 	coin_id: productId
 			 },
-			 headers: {'Content-Type': 'application/json; charset=utf-8'}
+			 headers: epaperConfig.getHttpHeader()
 		 })
 		 .success(function(data, status, headers, config){
 			 if(!data){
@@ -215,7 +242,6 @@ angular.module('starter.controllers', ['ngDraggable'])
 				 return;
 			 }
 		
-			 
 			 $rootScope.user.paper_coin += paper_cnt;
 			 $scope.sendMsg.paper_cnt = angular.copy($rootScope.user.paper_coin); 
 			 console.log('charge:: success!');
@@ -261,17 +287,17 @@ angular.module('starter.controllers', ['ngDraggable'])
 	};
 })
 
-.controller('SettingCtrl', function($scope, $rootScope, $http){
+.controller('SettingCtrl', function($scope, $rootScope, $http, epaperConfig){
 	$scope.modify = function(user){
 		 $http({
 			 method: 'PUT',
-			 url: $rootScope.server_uri + '/users/' + user.id,
+			 url: epaperConfig.server_uri + '/users/' + user.id,
 			 data: {
 				 	id: user.id,
 				 	sex: user.sex,
 				 	age: user.age
 			 },
-			 headers: {'Content-Type': 'application/json; charset=utf-8'}
+			 headers: epaperConfig.getHttpHeader()
 		 })
 		 .success(function(data, status, headers, config){
 			 if(!data){
@@ -296,11 +322,11 @@ angular.module('starter.controllers', ['ngDraggable'])
 	$scope.resetReject = function(user){
 		 $http({
 			 method: 'DELETE',
-			 url: $rootScope.server_uri + '/users/' + user.id + '/reject',
+			 url: epaperConfig.server_uri + '/users/' + user.id + '/reject',
 			 data: {
 				 	id: user.id,
 			 },
-			 headers: {'Content-Type': 'application/json; charset=utf-8'}
+			 headers: epaperConfig.getHttpHeader()
 		 })
 		 .success(function(data, status, headers, config){
 			 if(!data){

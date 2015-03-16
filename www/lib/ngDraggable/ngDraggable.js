@@ -36,6 +36,7 @@ angular.module("ngDraggable", [])
 
                     var onDragSuccessCallback = $parse(attrs.ngDragSuccess) || null;
                     var allowTransform = angular.isDefined(attrs.allowTransform) ? scope.$eval(attrs.allowTransform) : true;
+//                    var _fixy = element[0].getBoundingClientRect().top - element[0].offsetHeight; //jbpark
 
                     console.log("40","scope","link",  angular.isDefined(attrs.allowTransform) , allowTransform);
 
@@ -169,7 +170,9 @@ angular.module("ngDraggable", [])
                             _tx = _mx - _mrx - _dragOffset.left;
                             _ty = _my - _mry - _dragOffset.top;
                         }
-
+                        
+//                        _ty = _fixy; //jbpark
+                        console.log('ngDraggable::' + _ty);
                         moveElement(_tx, _ty);
 
                         $rootScope.$broadcast('draggable:move', { x: _mx, y: _my, tx: _tx, ty: _ty, event: evt, element: element, data: _data, uid: _myid });

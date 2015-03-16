@@ -5,10 +5,9 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngCordova'])
+angular.module('starter', ['ionic', 'starter.controllers', 'ngCordova'])
 
-.run(function($ionicPlatform, $rootScope, $http, $cordovaSQLite, $cordovaGeolocation, $cordovaPush, $cordovaToast, $ionicLoading) {
-	$rootScope.server_uri = 'https://ec2-54-65-104-219.ap-northeast-1.compute.amazonaws.com';
+.run(function($ionicPlatform, $rootScope, $http, $cordovaSQLite, $cordovaGeolocation, $cordovaPush, $cordovaToast, $ionicLoading, epaperConfig) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -20,84 +19,166 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       StatusBar.styleDefault();
     }
     
+	 $ionicLoading.show({
+		 template : '<i class="ion-loading-c"></i>시스템정보를 확인하는 중입니다...', 
+		 animation: 'fade-in',  
+		 noBackdrop: false,
+		 showDelay: 500});
     var db = $cordovaSQLite.openDB({ name: "epage.db", bgType: 1 });
-    async.waterfall([
-                     function(callback){
-                    	 $ionicLoading.show({template : '<ion-spinner icon="bubbles" ></ion-spinner>시스템정보를 확인하는 중입니다...', animation: 'fade-in',  noBackdrop: false});
-                    	 callback(null, db, $rootScope, $cordovaSQLite);
-                     },
-                     initInputBox,
-                     initSendBox,
-                     function(callback){
-                    	callback(null, $cordovaPush, $rootScope, $http, $cordovaToast); 
-                     },
-                     initNotification,
-                     function(regId, callback){
-                    	 var user = {registration_id: regId};
-                    	 var telephoneNumber = cordova.require("cordova/plugin/telephonenumber");
-                    	 telephoneNumber.get(function(phone_no) {
-                    		 user.phone_no = phone_no;
-                    		 callback(null, user);
-                    	 },
-                    	 function(){
-                    		 var msg = '해당기기의 전화번호를 가져올 수 없습니다.\n 전화번호가 없는 기기에서는 전단지를 발송할 수 없습니다.';
-                    		 console.error(msg);
-                    		 $cordovaToast.showLongCenter(msg);
-                    		 callback(null, user);
-                    	 });
-                     },
-                     function(user, callback){
-                    	 $cordovaGeolocation.getCurrentPosition({timeout: 10000, enableHighAccuracy: true, maximumAge:1000*60*5}).then(
-                    			 function(position) {
-                    				 user.latitude = position.coords.latitude;
-                    				 user.longitude = position.coords.longitude;
-                    				 console.log('Geolocation::lat=' + user.latitude + ',long=' + user.longitude);
-                    				 callback(null, user);
-                    			 },
-                    			 function(err){
-                    				 var msg = '위치정보를 가져올 수 없어 사용이 제한될 수 있습니다.\n위치정보를 사용할 수 있도록 설정해 주세요!';
-                    				 console.error(msg);
-                    				 $cordovaToast.showLongCenter(msg);
-                    				 callback(null, user);
-                    			 });
-                     },
-                     function(user, callback){
-                    	 $http({
-                    		 method: 'POST',
-                    		 url: $rootScope.server_uri + '/users',
-                    		 data: user,
-                    		 headers: {'Content-Type': 'application/json; charset=utf-8'}
-                    	 })
-                    	 .success(function(data, status, headers, config){
-                    		if(!data || (data.result && data.result === 'fail')){
-                    			var err = new Error('사용자정보를 가져오는중 에러가 발생하였습니다.');
-                    			callback(err);
-                    			return;
-                    		}
-                    		callback(null, data);
-                    	 })
-                    	 .error(function(data, status, headers, config){
-                    		 console.error('get user:: ' + status);
-                    		 var err = new Error('서버와 연결이 원활하지 않습니다.');
-                    		 callback(err);
-                    	 });
-                     },
-                     function(user, callback){
-                    	 $rootScope.user = user;
-                    	 receiveMessage($http, $rootScope, function(){
-                    		 callback(null, user);
-                    	 });
-                     }
-            ],
-            function(err, result){
+    
+    initUser(db, $cordovaSQLite, function(err, result){
+    	if(err){
+    		console.error('init user:: error', err);
+    		throw err; 
+    	}
+    	
+    	var fns = [
+			function(callback){
+				callback(null, db, $rootScope, $cordovaSQLite);
+			},
+			initInputBox,
+			function(callback){
+				callback(null, db, $rootScope, $cordovaSQLite);
+			},
+			initSendBox
+    	];
+    	if(result){
+    		console.log('local user:: yes [' + result.id + ']');
+    		fns.push(
+    			function(callback){
+	               	 $http({
+	            		 method: 'GET',
+	            		 url: epaperConfig.server_uri + '/users/' + result.id,
+	            		 data: {id: result.id},
+	            		 headers: epaperConfig.getHttpHeader()
+	            	 })
+	            	 .success(function(data, status, headers, config){
+	            		if(!data || (data.result && data.result === 'fail')){
+	            			console.error('get user by id:: fail');
+	            			var err = new Error('사용자정보를 가져오는중 에러가 발생하였습니다.');
+	            			callback(err);
+	            			return;
+	            		}
+	            		console.log('get user by id:: success ' + JSON.stringify(data));
+	            		callback(null, data);
+	            	 })
+	            	 .error(function(data, status, headers, config){
+	            		 console.error('get user by id:: ' + status);
+	            		 var err = new Error('서버와 연결이 원활하지 않습니다.');
+	            		 callback(err);
+	            	 });    				
+    			}
+    		);
+    		initNotification($cordovaPush, $rootScope, $http, $cordovaToast, function(err, result){
+    			console.log('initNotification');
+    		});
+    	}else{
+    		console.log('local user:: no');
+    		fns.push(
+				function(callback){
+                	callback(null, $cordovaPush, $rootScope, $http, $cordovaToast); 
+                 },
+                 initNotification,
+                 function(regId, callback){
+                	 var user = {registration_id: regId};
+                	 var telephoneNumber = cordova.require("cordova/plugin/telephonenumber");
+                	 telephoneNumber.get(function(phone_no) {
+                		 user.phone_no = phone_no.replace('+82','0');
+                		 callback(null, user);
+                	 },
+                	 function(){
+                		 var msg = '해당기기의 전화번호를 가져올 수 없습니다.';
+                		 console.error(msg);
+                		 $cordovaToast.showLongCenter(msg);
+                		 callback(null, user);
+                	 });
+                 },
+                 function(user, callback){
+                	 $http({
+                		 method: 'POST',
+                		 url: epaperConfig.server_uri + '/users',
+                		 data: user,
+                		 headers: epaperConfig.getHttpHeader()
+                	 })
+                	 .success(function(data, status, headers, config){
+                		if(!data || (data.result && data.result === 'fail')){
+                			var err = new Error('사용자정보를 가져오는중 에러가 발생하였습니다.');
+                			callback(err);
+                			return;
+                		}
+                		callback(null, data);
+                	 })
+                	 .error(function(data, status, headers, config){
+                		 console.error('get user:: ' + status);
+                		 var err = new Error('서버와 연결이 원활하지 않습니다.');
+                		 callback(err);
+                	 });
+                 },
+                 function(user, callback){
+                	var query_insert = 'INSERT INTO user(id, phone_no, registration_id) VALUES(?,?,?)';
+         			var args = [user.id, user.phone_no, user.registration_id];
+         			$cordovaSQLite.execute(db, query_insert, args).then(function(res){
+         				console.log('user :: insert');
+         				callback(null, user);
+         			});
+         		}	                 
+    		);
+    	}
+    	
+    	fns.push(
+            function(user, callback){
+            	$rootScope.$apply(function(){
+            		$rootScope.user = user;
+               	 	receiveMessage($http, $rootScope, epaperConfig, function(){
+               	 		callback(null, user);
+               	 	});
+            	});
+            }
+    	);
+    	
+    	async.waterfall(fns,
+    		function(err, result){
     			$ionicLoading.hide();
     			if(err){
     				console.error('init error', err);
     				alert('오류가 발생하여 사용할 수 없습니다.');
     				navigator.app.exitApp();
-    			}else{
-    				console.log('loadding success!');
+    				return;
     			}
+    			console.log('loadding success!');
+    			
+    			$cordovaGeolocation.getCurrentPosition({timeout: 10000, enableHighAccuracy: true, maximumAge:0}).then(
+    					function(position) {
+    						var data = {latitude:  position.coords.latitude, longitude: position.coords.longitude}
+    						$rootScope.user.latitude = position.coords.latitude;
+    						$rootScope.user.longitude = position.coords.longitude;
+    						console.log('Geolocation::lat=' + data.latitude + ',long=' + data.longitude);
+    						
+    	                	 $http({
+    	                		 method: 'PUT',
+    	                		 url: epaperConfig.server_uri + '/users/' + result.id + '/coords',
+    	                		 data: data,
+    	                		 headers: epaperConfig.getHttpHeader()
+    	                	 })
+    	                	 .success(function(data, status, headers, config){
+    	                		if(!data || (data.result && data.result === 'fail')){
+    	                			console.error('위치정보 업데이트에 실패하였습니다.', err);
+    	                			$cordovaToast.showLongCenter('위치정보 업데이트에 실패하였습니다.');
+    	                			return;
+    	                		}
+    	                	 })
+    	                	 .error(function(data, status, headers, config){
+    	                		 console.error('get user:: ' + status);
+    	                		 var err = new Error('서버와 연결이 원활하지 않습니다.');
+    	                	 });
+    					},
+    					function(err){
+    						var msg = '위치정보를 사용할 수 있도록 설정해 주세요!';
+    						console.error(msg, err);
+    						$cordovaToast.showLongCenter(msg);
+    					});    
+    		}    			
+    	);
     });
     
 	if(typeof inappbilling !== "undefined"){
@@ -119,6 +200,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 	}
     
   });
+})
+
+.constant('epaperConfig', {
+	server_uri : 'https://ec2-54-65-104-219.ap-northeast-1.compute.amazonaws.com',
+	admin_no : '00000',
+	getHttpHeader : function(){
+		return {
+			'Content-Type': 'application/json; charset=utf-8',
+			'auth-tocken': 'as2ld5fklTal3d5fk%7Gsa2@ldf!4k-GEa^8sld*9fE0+sl=1de',
+			'timestamp': (new Date()).getTime()
+		}
+	}
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
@@ -181,12 +274,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 });
 
 
-function receiveMessage($http, $rootScope, callback){
+function receiveMessage($http, $rootScope, epaperConfig, callback){
 	 $http({
 		 method: 'GET',
-		 url: $rootScope.server_uri + '/messages/' + $rootScope.user.id,
+		 url: epaperConfig.server_uri + '/messages/' + $rootScope.user.id,
 		 data: {user_id: $rootScope.user.id},
-		 headers: {'Content-Type': 'application/json; charset=utf-8'}
+		 headers: epaperConfig.getHttpHeader()
 	 })
 	 .success(function(data, status, headers, config){
 		 if(!data){
@@ -215,6 +308,37 @@ function receiveMessage($http, $rootScope, callback){
 	 });	
 }
 
+function initUser(db, $cordovaSQLite, callback){
+	var query_create ='CREATE TABLE IF NOT EXISTS user (id integer primary key, phone_no text, registration_id text)';
+	var query_select = 'select * from user';
+	
+	async.waterfall([
+	   function(callback){
+		   $cordovaSQLite.execute(db, query_create, []).then(function(res){
+			  console.log('user :: create');
+			  callback(null);
+		   });
+	   },
+	   function(callback){
+		   $cordovaSQLite.execute(db, query_select, []).then(function(res){
+			   console.log('user :: select');
+			   if(res.rows.length > 0){
+				   callback(null, res.rows.item(0));
+			   }else{
+				   callback(null, false);
+			   }
+		   });
+	   }
+	],
+	function(err, result){
+		if(err){ 
+			console.error('local user init', err);
+			throw err; 
+		}
+		callback(null, result);
+	});
+}
+
 function initInputBox(db, $rootScope, $cordovaSQLite, callback){
     var query_create = 'CREATE TABLE IF NOT EXISTS input_box (id integer primary key, date text, phone_no text, content text)';
     var query_drop = 'DROP TABLE IF EXISTS input_box';
@@ -241,7 +365,7 @@ function initInputBox(db, $rootScope, $cordovaSQLite, callback){
     ],
     function(err, result){
     	if(err){ throw err; }
-    	callback(null, db, $rootScope, $cordovaSQLite);
+    	callback(null);
     });
     
     $rootScope.InputBox = {
