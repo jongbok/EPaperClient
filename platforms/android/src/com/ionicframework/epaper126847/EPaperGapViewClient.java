@@ -7,6 +7,7 @@
 package com.ionicframework.epaper126847;
 
 import org.apache.cordova.CordovaInterface;
+import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.CordovaWebViewClient;
 
 import android.net.http.SslError;
@@ -20,9 +21,8 @@ import android.webkit.WebView;
  */
 public class EPaperGapViewClient extends CordovaWebViewClient {
 
-	public EPaperGapViewClient(CordovaInterface cordova) {
-		super(cordova);
-		// TODO Auto-generated constructor stub
+	public EPaperGapViewClient(CordovaInterface cordova, CordovaWebView view) {
+		super(cordova, view);
 	}
 	
 	@Override

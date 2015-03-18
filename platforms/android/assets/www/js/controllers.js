@@ -87,6 +87,13 @@ angular.module('starter.controllers', ['ngDraggable'])
 			content: ''
 	};
 	
+	$scope.sendMsg = angular.copy(defaultObj);
+	
+	$rootScope.$watch('user.paper_coin', function(newVal, oldVal){
+		if(newVal === oldVal) return;
+		$scope.sendMsg.paper_cnt = newVal;
+	});
+	
 	$scope.init = function(){
 		$scope.sendMsg = angular.copy(defaultObj);
 		$scope.sendMsg.date = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
@@ -94,35 +101,6 @@ angular.module('starter.controllers', ['ngDraggable'])
 			console.log('send init:: paper_coin=' + $rootScope.user.paper_coin);
 			$scope.sendMsg.paper_cnt = angular.copy($rootScope.user.paper_coin);
 		}
-		
-		$scope.$watch('sendMsg.paper_cnt', function(){
-			console.log('send checkPaperCnt:: [보유:' + $rootScope.user.paper_coin + ', 요청:' + $scope.sendMsg.paper_cnt + ']');
-			if($scope.sendMsg.paper_cnt > $rootScope.user.paper_coin){
-				alert('사용가능한 전단지가 ' + $rootScope.user.paper_coin + '장 남았습니다.');
-				$scope.sendMsg.paper_cnt = $rootScope.user.paper_coin;
-			}
-		});
-		
-		$scope.checkPaperCnt = function(message){
-			console.log('send checkPaperCnt:: [보유:' + $rootScope.user.paper_coin + ', 요청:' + $scope.sendMsg.paper_cnt + ']');
-			if($scope.sendMsg.paper_cnt > $rootScope.user.paper_coin){
-				alert('사용가능한 전단지가 ' + $rootScope.user.paper_coin + '장 남았습니다.');
-				$scope.sendMsg.paper_cnt = $rootScope.user.paper_coin;
-			}
-		};
-		
-		$scope.checkContent = function(message){
-			if(message.content.length > 2000){
-				alert('전단지내용은 2,000자 이상 입력할 수 없습니다.');
-				message.content = message.content.substr(0, 2000);
-			}
-		}
-		
-		$rootScope.$watch('user.paper_coin', function(newVal, oldVal){
-			console.log('send init:: newVal=' + newVal);
-			$scope.sendMsg.paper_cnt = newVal;
-		});
-		
 	};
 
 	$scope.send = function(message){
@@ -364,4 +342,13 @@ angular.module('starter.controllers', ['ngDraggable'])
 			});
 		}
 	};
-});
+})
+
+.filter('nl2br', ['$sanitize', function($sanitize) {
+	var tag = (/xhtml/i).test(document.doctype) ? '<br />' : '<br>';
+	return function(msg) {
+		// ngSanitize's linky filter changes \r and \n to &#10; and &#13; respectively
+		msg = (msg + '').replace(/(\r\n|\n\r|\r|\n|&#10;&#13;|&#13;&#10;|&#10;|&#13;)/g, tag + '$1');
+		return $sanitize(msg);
+	};
+}]);

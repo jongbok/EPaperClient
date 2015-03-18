@@ -8,7 +8,7 @@
         	<p>나이: {{sendMsg.fmt_age}}</p>
         	<p>내위치로부터 거리: {{sendMsg.fmt_distance}}</p>
 	        <p>발송건수: {{sendMsg.paper_cnt | number}} 장</p>
-	        <p>{{sendMsg.content}}</p>
+	        <p ng-bind-html="sendMsg.content | nl2br"></p>
         </div>
       </div>
      </div>

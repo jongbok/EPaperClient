@@ -138,7 +138,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngCordova'])
     			$ionicLoading.hide();
     			if(err){
     				console.error('init error', err);
-    				alert('오류가 발생하여 사용할 수 없습니다.');
+    				alert('서버점검중 입니다.');
     				navigator.app.exitApp();
     				return;
     			}

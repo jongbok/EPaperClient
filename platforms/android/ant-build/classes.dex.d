@@ -9,6 +9,7 @@ D:\projects\EPaper\platforms\android\ant-build\classes\com\ionic\keyboard\IonicK
 D:\projects\EPaper\platforms\android\ant-build\classes\com\ionicframework\epaper126847\BuildConfig.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\com\ionicframework\epaper126847\CordovaApp.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\com\ionicframework\epaper126847\EPaperGapViewClient.class \
+D:\projects\EPaper\platforms\android\ant-build\classes\com\ionicframework\epaper126847\EPaperIceCreamViewClient.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\com\ionicframework\epaper126847\Manifest$permission.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\com\ionicframework\epaper126847\Manifest.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\com\ionicframework\epaper126847\R$attr.class \

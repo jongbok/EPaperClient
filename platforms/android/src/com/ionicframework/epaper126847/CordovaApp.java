@@ -32,4 +32,13 @@ public class CordovaApp extends CordovaActivity
         // Set by <content src="index.html" /> in config.xml
         loadUrl(launchUrl);
     }
+    
+    @Override
+    protected CordovaWebViewClient makeWebViewClient(CordovaWebView webView) {
+        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+            return new EPaperGapViewClient(this, webView);
+        } else {
+            return new EPaperIceCreamViewClient(this, webView);
+        }
+    }    
 }
