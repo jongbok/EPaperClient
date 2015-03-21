@@ -181,7 +181,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngCordova'])
     						
     	                	 $http({
     	                		 method: 'PUT',
-    	                		 url: epaperConfig.server_uri + '/users/' + result.id + '/coords',
+    	                		 url: epaperConfig.server_uri + '/users/' + user.id + '/coords',
     	                		 data: data,
     	                		 headers: epaperConfig.getHttpHeader()
     	                	 })
