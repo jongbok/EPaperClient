@@ -82,7 +82,7 @@ angular.module('starter.controllers', ['ngDraggable'])
 			age4: 1,
 			age5: 1,
 			age6: 1,
-			distance: 0,
+			distance: 5000,
 			paper_cnt: 10,
 			content: ''
 	};

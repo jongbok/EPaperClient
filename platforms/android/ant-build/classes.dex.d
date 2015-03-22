@@ -48,6 +48,7 @@ D:\projects\EPaper\platforms\android\ant-build\classes\com\smartmobilesoftware\u
 D:\projects\EPaper\platforms\android\ant-build\classes\com\smartmobilesoftware\util\Purchase.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\com\smartmobilesoftware\util\Security.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\com\smartmobilesoftware\util\SkuDetails.class \
+D:\projects\EPaper\platforms\android\ant-build\classes\nl\xservices\plugins\LaunchMyApp.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\nl\xservices\plugins\Toast$1.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\nl\xservices\plugins\Toast.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\org\apache\cordova\device\Device.class \

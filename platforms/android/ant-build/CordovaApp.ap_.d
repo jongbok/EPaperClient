@@ -44,7 +44,6 @@ D:\projects\EPaper\platforms\android\assets\www\css\style.css \
 D:\projects\EPaper\platforms\android\assets\www\img\ionic.png \
 D:\projects\EPaper\platforms\android\assets\www\js\app.js \
 D:\projects\EPaper\platforms\android\assets\www\js\controllers.js \
-D:\projects\EPaper\platforms\android\assets\www\js\services.js \
 D:\projects\EPaper\platforms\android\assets\www\lib\angular \
 D:\projects\EPaper\platforms\android\assets\www\lib\angular-animate \
 D:\projects\EPaper\platforms\android\assets\www\lib\angular-sanitize \
@@ -148,6 +147,7 @@ D:\projects\EPaper\platforms\android\assets\www\plugins\com.brodysoft.sqlitePlug
 D:\projects\EPaper\platforms\android\assets\www\plugins\com.ionic.keyboard \
 D:\projects\EPaper\platforms\android\assets\www\plugins\com.phonegap.plugins.PushPlugin \
 D:\projects\EPaper\platforms\android\assets\www\plugins\com.smartmobilesoftware.androidinappbilling \
+D:\projects\EPaper\platforms\android\assets\www\plugins\nl.x-services.plugins.launchmyapp \
 D:\projects\EPaper\platforms\android\assets\www\plugins\nl.x-services.plugins.toast \
 D:\projects\EPaper\platforms\android\assets\www\plugins\org.apache.cordova.device \
 D:\projects\EPaper\platforms\android\assets\www\plugins\org.apache.cordova.file \
@@ -160,6 +160,9 @@ D:\projects\EPaper\platforms\android\assets\www\plugins\com.phonegap.plugins.Pus
 D:\projects\EPaper\platforms\android\assets\www\plugins\com.phonegap.plugins.PushPlugin\www\PushNotification.js \
 D:\projects\EPaper\platforms\android\assets\www\plugins\com.smartmobilesoftware.androidinappbilling\www \
 D:\projects\EPaper\platforms\android\assets\www\plugins\com.smartmobilesoftware.androidinappbilling\www\inappbilling.js \
+D:\projects\EPaper\platforms\android\assets\www\plugins\nl.x-services.plugins.launchmyapp\www \
+D:\projects\EPaper\platforms\android\assets\www\plugins\nl.x-services.plugins.launchmyapp\www\android \
+D:\projects\EPaper\platforms\android\assets\www\plugins\nl.x-services.plugins.launchmyapp\www\android\LaunchMyApp.js \
 D:\projects\EPaper\platforms\android\assets\www\plugins\nl.x-services.plugins.toast\test \
 D:\projects\EPaper\platforms\android\assets\www\plugins\nl.x-services.plugins.toast\www \
 D:\projects\EPaper\platforms\android\assets\www\plugins\nl.x-services.plugins.toast\test\tests.js \
