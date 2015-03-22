@@ -37,23 +37,23 @@ angular.module('starter.controllers', ['ngDraggable'])
 			 .success(function(data, status, headers, config){
 				 if(!data){
 					 console.error('reject:: response data is null!');
-					 alert('거부처리 하는중 에러가 발생하였습니다.');
+					 alert('메세지를 차단 하는중 에러가 발생하였습니다.');
 					 return;
 				 }
 				 if(data.result && data.result === 'fail'){
 					 console.error('reject:: response fail[' + data.message + ']');
-					 alert('거부처리 하는중 에러가 발생하였습니다.');
+					 alert('메세지를 차단 하는중 에러가 발생하였습니다.');
 					 return;
 				 }
 			
 				 $rootScope.InputBox.remove(message);
 				 $rootScope.user.reject_cnt += 1;
 				 console.log('reject:: success!');
-				 alert('거부처리 되었습니다.');
+				 alert('차단 되었습니다.');
 			 })
 			 .error(function(data, status, headers, config){
 				 console.error('send message:: http error![status:' + status + ']');
-				 alert('거부처리 하는중 에러가 발생하였습니다.');
+				 alert('메세지를 차단 하는중 에러가 발생하였습니다.');
 			 });			
 		}
 		if(endX > right){
