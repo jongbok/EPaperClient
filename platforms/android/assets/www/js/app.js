@@ -19,6 +19,23 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngCordova'])
       StatusBar.styleDefault();
     }
     
+    /*
+    Kakao.init(epaperConfig.Kakao.API_KEY);
+    Kakao.Link.createTalkLinkButton({
+      container: '#kakao-link-btn',
+      label: '번개전단 앱을 소개합니다.',
+      image: {
+        src: epaperConfig.public_uri + '/images/epaper.png',
+        width: '96',
+        height: '96'
+      },
+      webButton: {
+        text: '내근처에 있는 사람들에게 메세지 발송',
+        url: 'https://play.google.com/store/apps/details?id=com.ionicframework.epaper126847'
+      }
+    });
+    	*/
+	
 	 $ionicLoading.show({
 		 template : '<i class="ion-loading-c"></i>시스템정보를 확인하는 중입니다...', 
 		 animation: 'fade-in',  
@@ -112,8 +129,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngCordova'])
                 	 });
                  },
                  function(user, callback){
-                	var query_insert = 'INSERT INTO user(id, phone_no, registration_id) VALUES(?,?,?)';
-         			var args = [user.id, user.phone_no, user.registration_id];
+                	var query_insert = 'INSERT INTO user(id, name, phone_no, registration_id) VALUES(?,?,?,?)';
+         			var args = [user.id, user.name, user.phone_no, user.registration_id];
          			$cordovaSQLite.execute(db, query_insert, args).then(function(res){
          				console.log('user :: insert');
          				callback(null, user);
@@ -228,8 +245,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngCordova'])
 })
 
 .constant('epaperConfig', {
-	server_uri : 'https://ec2-54-65-104-219.ap-northeast-1.compute.amazonaws.com',
+	server_uri : 'https://54.65.104.219:3000',
+	public_uri : 'http://54.65.104.219',
 	admin_no : '00000',
+	Kakao : {
+		API_KEY: 'e277b5a08e931ee031a5a7b093a8e3f1'
+	},
 	getHttpHeader : function(){
 		return {
 			'Content-Type': 'application/json; charset=utf-8',
@@ -334,7 +355,9 @@ function receiveMessage($http, $rootScope, epaperConfig, callback){
 }
 
 function initUser(db, $cordovaSQLite, callback){
-	var query_create ='CREATE TABLE IF NOT EXISTS user (id integer primary key, phone_no text, registration_id text)';
+	var query_create ='CREATE TABLE IF NOT EXISTS user (id integer primary key, name text, phone_no text, registration_id text)';
+	var query_pragma = "PRAGMA table_info('user')";
+	var query_alter = "ALTER TABLE user ADD COLUMN name text default '손님'";
 	var query_select = 'select * from user';
 	
 	async.waterfall([
@@ -342,6 +365,23 @@ function initUser(db, $cordovaSQLite, callback){
 		   $cordovaSQLite.execute(db, query_create, []).then(function(res){
 			  console.log('user :: create');
 			  callback(null);
+		   });
+	   },
+	   function(callback){
+		   $cordovaSQLite.execute(db, query_pragma, []).then(function(res){
+			   console.log('user :: PRAGMA');
+			   for(var i=0; i<res.rows.length; i++){
+				   var columnName = res.rows.item(i).name;
+				   if(columnName.toUpperCase() === 'NAME'){
+					   callback(null);
+					   return;
+				   }
+			   }
+			   
+			   $cordovaSQLite.execute(db, query_alter, []).then(function(res){
+					  console.log('user :: PRAGMA alter');
+					  callback(null);
+			   });
 		   });
 	   },
 	   function(callback){
@@ -496,7 +536,6 @@ function initNotification($cordovaPush, $rootScope, $http, $cordovaToast, epaper
 						$cordovaToast.showLongCenter('새로운 전단지가 도착했습니다!');
 					});
 					console.log('GCM:: message = ' + notification.message + ' msgCount = ' + notification.msgcnt);
-					// TODO 메세지 수신
 					break;
 				case 'error':
 					console.error('GCM error :: ' + notification.msg);

@@ -1,0 +1,28 @@
+<ion-modal-view view-title="채팅">
+	<ion-header-bar class="chat" >
+		<div class="button button-clear" style="position:absolute; top:0px; right:0px;"  ng-click="data.leave()"><span class="icon ion-close"></span></div>
+		<p ng-bind-html="data.content | nl2br"></p>
+	</ion-header-bar>
+	<ion-content has-bouncing="true" has-header="true" delegate-handle="chat-handle" ng-style="{ bottom: data.keyboardHeight + 'px' }" >
+      <div ng-repeat="chat in chats" >
+		<div ng-if="!chat.system" >
+			<div ng-class="{ chat_right: chat.userId !== user.id, chat_left: chat.userId === user.id }" >
+				<p>{{ chat.text }}</p>
+			</div>
+			<p>{{ chat.userName }}</p>
+		</div>
+		<div ng-if="chat.system" >
+			<u style="color:blue;">{{ chat.text }}</u>
+		</div>
+      </div>
+      <div id="start"></div>
+    </ion-content>
+    <ion-footer-bar keyboard-attach class="bar-stable item-input-inset">
+      <label class="item-input-wrapper">
+        <input type="text" chat placeholder="메세지를 입력하세요!" on-return="data.sendMessage()" ng-disabled="data.disable" ng-model="data.message" on-blur="data.inputDown()" />
+      </label>    
+      <button class="button button-clear" ng-disabled="data.disable" ng-click="data.sendMessage()">
+        Send
+      </button>
+    </ion-footer-bar>
+</ion-modal-view>

@@ -1,5 +1,6 @@
 D:\projects\EPaper\platforms\android\ant-build\CordovaApp.ap_ \
  : D:\projects\EPaper\platforms\android\res\drawable\icon.png \
+D:\projects\EPaper\platforms\android\res\drawable\promotion.png \
 D:\projects\EPaper\platforms\android\res\drawable-hdpi\icon.png \
 D:\projects\EPaper\platforms\android\res\drawable-land-hdpi\screen.png \
 D:\projects\EPaper\platforms\android\res\drawable-land-ldpi\screen.png \
@@ -41,7 +42,9 @@ D:\projects\EPaper\platforms\android\assets\www\plugins \
 D:\projects\EPaper\platforms\android\assets\www\telephonenumber.js \
 D:\projects\EPaper\platforms\android\assets\www\templates \
 D:\projects\EPaper\platforms\android\assets\www\css\style.css \
+D:\projects\EPaper\platforms\android\assets\www\img\epaper.png \
 D:\projects\EPaper\platforms\android\assets\www\img\ionic.png \
+D:\projects\EPaper\platforms\android\assets\www\img\kakaolink_btn.png \
 D:\projects\EPaper\platforms\android\assets\www\js\app.js \
 D:\projects\EPaper\platforms\android\assets\www\js\controllers.js \
 D:\projects\EPaper\platforms\android\assets\www\lib\angular \
@@ -52,6 +55,7 @@ D:\projects\EPaper\platforms\android\assets\www\lib\async \
 D:\projects\EPaper\platforms\android\assets\www\lib\ionic \
 D:\projects\EPaper\platforms\android\assets\www\lib\ngCordova \
 D:\projects\EPaper\platforms\android\assets\www\lib\ngDraggable \
+D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client \
 D:\projects\EPaper\platforms\android\assets\www\lib\angular\angular-csp.css \
 D:\projects\EPaper\platforms\android\assets\www\lib\angular\angular.js \
 D:\projects\EPaper\platforms\android\assets\www\lib\angular\angular.min.js \
@@ -143,6 +147,30 @@ D:\projects\EPaper\platforms\android\assets\www\lib\ngDraggable\example.html \
 D:\projects\EPaper\platforms\android\assets\www\lib\ngDraggable\LICENSE.txt \
 D:\projects\EPaper\platforms\android\assets\www\lib\ngDraggable\ngDraggable.js \
 D:\projects\EPaper\platforms\android\assets\www\lib\ngDraggable\README.md \
+D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client\History.md \
+D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client\index.js \
+D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client\lib \
+D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client\LICENSE \
+D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client\Makefile \
+D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client\package.json \
+D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client\README.md \
+D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client\socket.io.js \
+D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client\support \
+D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client\test \
+D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client\lib\index.js \
+D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client\lib\manager.js \
+D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client\lib\on.js \
+D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client\lib\socket.js \
+D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client\lib\url.js \
+D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client\support\browserify.js \
+D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client\support\browserify.sh \
+D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client\test\connection.js \
+D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client\test\index.js \
+D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client\test\socket.js \
+D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client\test\support \
+D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client\test\url.js \
+D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client\test\support\env.js \
+D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client\test\support\server.js \
 D:\projects\EPaper\platforms\android\assets\www\plugins\com.brodysoft.sqlitePlugin \
 D:\projects\EPaper\platforms\android\assets\www\plugins\com.ionic.keyboard \
 D:\projects\EPaper\platforms\android\assets\www\plugins\com.phonegap.plugins.PushPlugin \
@@ -195,6 +223,7 @@ D:\projects\EPaper\platforms\android\assets\www\plugins\org.apache.cordova.file\
 D:\projects\EPaper\platforms\android\assets\www\plugins\org.apache.cordova.media\www \
 D:\projects\EPaper\platforms\android\assets\www\plugins\org.apache.cordova.media\www\Media.js \
 D:\projects\EPaper\platforms\android\assets\www\plugins\org.apache.cordova.media\www\MediaError.js \
+D:\projects\EPaper\platforms\android\assets\www\templates\modal-chat.html \
 D:\projects\EPaper\platforms\android\assets\www\templates\modal-shop.html \
 D:\projects\EPaper\platforms\android\assets\www\templates\tab-home.html \
 D:\projects\EPaper\platforms\android\assets\www\templates\tab-send.html \

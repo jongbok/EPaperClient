@@ -1,7 +1,12 @@
 <ion-view view-title="받은전단지" ng-drop="true" ng-drop-success="onDropComplete($data,$event)" >
+  	<ion-nav-buttons side="right">
+  		<a id="kakao-link-btn" href="javascript:;" title="카카오톡 친구들에게 번개전단을 추천해주세요!">
+  			<img src="img/kakaolink_btn.png" border="0" />
+  		</a>
+  	</ion-nav-buttons>
   <ion-content class="padding" >
     <div class="list card" ng-repeat="message in messages" ng-drag="true" ng-drag-data="message" ng-center-anchor="true" >
-      <div class="item item-divider" on-hold="phoneCall(message)">
+      <div class="item item-divider" on-hold="data.join(message.id, message.content)">
       	<i class="ion-information-circled" ng-show="message.phone_no === admin_no" ></i>
       	{{message.date}}
       </div>
