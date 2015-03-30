@@ -1,12 +1,12 @@
-angular.module('starter.controllers', ['ngDraggable'])
+angular.module('starter.controllers', ['ngDraggable','ionic','monospaced.elastic','angularMoment'])
 
 .controller('HomeCtrl', function($scope, $rootScope, $http, $window, $ionicModal, $ionicScrollDelegate, $timeout, epaperConfig) {
 	$ionicModal.fromTemplateUrl('templates/modal-chat.html', {
 		scope : $scope
 	}).then(function(modal) {
 		$scope.chatwin = modal;
+		initialChat($scope, $ionicScrollDelegate, $timeout, epaperConfig.server_uri);
 	});
-	initialChat($scope, $ionicScrollDelegate, $timeout, epaperConfig.server_uri);
 	
 	$scope.admin_no = epaperConfig.admin_no;
 	$scope.phoneCall = function(message){
@@ -83,8 +83,8 @@ angular.module('starter.controllers', ['ngDraggable'])
 		scope : $scope
 	}).then(function(modal) {
 		$scope.chatwin = modal;
+		initialChat($scope, $ionicScrollDelegate, $timeout, epaperConfig.server_uri);
 	});
-	initialChat($scope, $ionicScrollDelegate, $timeout, epaperConfig.server_uri);
 	
 	var defaultObj = {
 			date: '2015-03-01 14:22:11',
@@ -172,7 +172,7 @@ angular.module('starter.controllers', ['ngDraggable'])
 			 $scope.sendMsg.paper_cnt = angular.copy($rootScope.user.paper_coin);
 			 console.log('send message:: success!');
 			 
-			 $scope.data.create(message.id, message.content);
+			 $scope.input.create(message.id, message.content);
 		 })
 		 .error(function(data, status, headers, config){
 			 $ionicLoading.hide();
@@ -280,12 +280,32 @@ angular.module('starter.controllers', ['ngDraggable'])
 })
 
 .controller('SettingCtrl', function($scope, $rootScope, $http, epaperConfig){
+	var origin = angular.copy($rootScope.user);
+	$scope.modified = false;
+	var isModified = function isModified(newVal, oldVal){
+		if(!newVal){ return; }
+		$scope.modified = !angular.equals($rootScope.user.name, origin.name)
+						|| !angular.equals($rootScope.user.sex, origin.sex)
+						|| parseInt($rootScope.user.age) !== parseInt(origin.age);
+	};
+	$rootScope.$watch('user.name',isModified);
+	$rootScope.$watch('user.sex',isModified);
+	$rootScope.$watch('user.age',isModified);
+	
+	$scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
+		if(fromState.name === 'tab.setting'){
+			$rootScope.user = angular.copy(origin);
+			console.log('setting:: leave!');
+		}
+	});
+	
 	$scope.modify = function(user){
 		 $http({
 			 method: 'PUT',
 			 url: epaperConfig.server_uri + '/users/' + user.id,
 			 data: {
 				 	id: user.id,
+				 	name: user.name,
 				 	sex: user.sex,
 				 	age: user.age
 			 },
@@ -302,7 +322,10 @@ angular.module('starter.controllers', ['ngDraggable'])
 				 alert('사용자정보를 변경 하는중 에러가 발생하였습니다.');
 				 return;
 			 }
-		
+			 
+			 origin = angular.copy(user);
+			 $scope.modified = false;
+			 alert('사용자정보가 저장되었습니다.');
 			 console.log('user modify:: success!');
 		 })
 		 .error(function(data, status, headers, config){
@@ -343,43 +366,46 @@ angular.module('starter.controllers', ['ngDraggable'])
 	};
 })
 
-.directive('chat', function($timeout) {
-  return {
-    restrict: 'A',
-    scope: {
-      'returnClose': '=',
-      'onReturn': '&',
-      'onFocus': '&',
-      'onBlur': '&'
-    },
-    link: function(scope, element, attr) {
-      element.bind('focus', function(e) {
-        if (scope.onFocus) {
-          $timeout(function() {
-            scope.onFocus();
+.directive('autolinker', ['$timeout',
+  function($timeout) {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        $timeout(function() {
+          var eleHtml = element.html();
+
+          if (eleHtml === '') {
+            return false;
+          }
+
+          var text = Autolinker.link(eleHtml, {
+            className: 'autolinker',
+            newWindow: false
           });
-        }
-      });
-      element.bind('blur', function(e) {
-        if (scope.onBlur) {
-          $timeout(function() {
-            scope.onBlur();
-          });
-        }
-      });
-      element.bind('keydown', function(e) {
-        if (e.which == 13) {
-          if (scope.returnClose) element[0].blur();
-          if (scope.onReturn) {
-            $timeout(function() {
-              scope.onReturn();
+
+          element.html(text);
+
+          var autolinks = element[0].getElementsByClassName('autolinker');
+
+          for (var i = 0; i < autolinks.length; i++) {
+            angular.element(autolinks[i]).bind('click', function(e) {
+              var href = e.target.href;
+              console.log('autolinkClick, href: ' + href);
+
+              if (href) {
+                //window.open(href, '_system');
+                window.open(href, '_blank');
+              }
+
+              e.preventDefault();
+              return false;
             });
           }
-        }
-      });
+        }, 0);
+      }
     }
   }
-})
+])
 
 .filter('nl2br', ['$sanitize', function($sanitize) {
 	var tag = (/xhtml/i).test(document.doctype) ? '<br />' : '<br>';
@@ -390,99 +416,140 @@ angular.module('starter.controllers', ['ngDraggable'])
 	};
 }]);
 
-
+var socket;
 function initialChat($scope, $ionicScrollDelegate, $timeout, url){
-  var isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
-  var socket = io.connect(url);
-  $scope.data = {};
-  $scope.chats = [];	
+	
+	function getSocket(){
+		if(socket && socket.connected){
+			return socket;
+		}else{
+			socket = io.connect(url, {'force new connection': true});
+			
+			  socket.on('connected', function(){
+				  console.log('chat:: connected!');
+			  });
+			  
+			  socket.on('disconnect', function(){
+				  $scope.chatwin.hide();
+				 console.log('chat:: disconnect'); 
+			  });
 
-  socket.on('connected', function(){
-	  console.log('chat:: connected!');
-  });
-  
-  socket.on('disconnect', function(){
-	  $scope.chatwin.hide();
-	 console.log('chat:: disconnect'); 
-  });
+			  socket.on('created', function(){
+					var msg = {system:true, text:'채팅을 시작합니다.'};
+					$scope.chats.push(msg);
+					$scope.chatwin.show();
+					$scope.input.disable = false;
+					console.log('chat:: created');
+				  });
 
-  $scope.data.join = function(roomId, content){
-	  if(!socket || !socket.connected){
-		  socket = io.connect(url);
-	  }
-	  $scope.data.content = content;
+			  socket.on('joined', function(data){
+				var msg = {system:true, text:data.userName + '님이 접속했습니다.'};
+				$scope.chats.push(msg);
+				$scope.chatwin.show();
+				$scope.input.disable = false;
+				console.log('chat:: joined');
+			  });
+
+			  socket.on('end', function(){
+				  alert('채팅이 종료되었습니다.');
+				  $scope.input.disable = true;
+				  console.log('chat:: end');
+			  });
+
+			  socket.on('chat', function(data){
+				console.log('chat:: receive!');
+				data.date = new Date();
+				$scope.chats.push(data);
+				keepKeyboardOpen();
+			    delete $scope.input.message;
+			    
+			    $timeout(function() {
+			        keepKeyboardOpen();
+			        viewScroll.scrollBottom(true);
+			      }, 0);
+			  });
+
+			  socket.on('leave1', function(){
+				  var msg = {system:true, text:'방장이 채팅을 종료해서 더 이상 채팅할 수 없습니다.'};
+				  $scope.chats.push(msg);
+				  $scope.input.disable = true;
+				  console.log('chat:: leave1');
+			  });
+
+			  socket.on('leave2', function(data){
+				  var msg = {system:true, text: data.userName + '님이 채팅방을 나갔습니다.'};
+				  $scope.chats.push(msg);
+				  $scope.input.disable = true;
+				  console.log('chat:: leave2');
+			  });
+			  
+			  socket.on('error', function(err){
+				 console.error('socket error', err);
+			  });
+
+			return socket;
+		}
+	}
+	
+	$scope.chats = [];	
+    $scope.input = { message: '' };	
+	var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
+    var footerBar; // gets set in $ionicView.enter
+    var txtInput; // ^^^
+
+	$scope.$on('$ionicView.enter', function() {
+		console.log('UserMessages $ionicView.enter');
+		
+		$timeout(function() {
+		  footerBar = $scope.chatwin.el.querySelector('#userMessagesView .bar-footer');
+		  var footerInput = footerBar.querySelector('textarea');
+		  txtInput = angular.element(footerInput);
+		}, 0);
+	});
+
+	$scope.sendMessage = function(sendMessageForm) {
+		var socket = getSocket();
+		socket.emit('send', $scope.input.message);
+		keepKeyboardOpen();
+    };	
+    
+	function keepKeyboardOpen() {
+		console.log('keepKeyboardOpen');
+		txtInput.one('blur', function() {
+			console.log('textarea blur, focus back on it');
+			txtInput[0].focus();
+	    });
+	}
+
+	$scope.$on('taResize', function(e, ta) {
+		console.log('taResize');
+		if (!ta) return;
+		var taHeight = ta[0].offsetHeight;
+		console.log('taHeight: ' + taHeight);
+		
+		if (!footerBar) return;
+		var newFooterHeight = taHeight + 10;
+		newFooterHeight = (newFooterHeight > 44) ? newFooterHeight : 44;
+		footerBar.style.height = newFooterHeight + 'px';
+	});	
+	
+  $scope.input.join = function(roomId, content){
+	  console.log('chat:: emit join');
+	  var socket = getSocket();
+	  $scope.input.content = content;
 	  socket.emit('join', {roomId:roomId, userId: $scope.user.id, userName: $scope.user.name});
   };
   
-  $scope.data.create = function(roomId, content){
-	  if(!socket || !socket.connected){
-		  socket = io.connect(url);
-	  }
-	  $scope.data.content = content;
+  $scope.input.create = function(roomId, content){
+	  var socket = getSocket();
+	  $scope.input.content = content;
 	  socket.emit('create', {roomId:roomId, userId: $scope.user.id, userName: $scope.user.name});
   };
   
-  socket.on('created', function(){
-	var msg = {system:true, text:'채팅을 시작합니다.'};
-	$scope.chats.push(msg);
-	$scope.chatwin.show();
-	$scope.data.disable = false;
-	console.log('chat:: created');
-  });
-
-  socket.on('joined', function(data){
-	var msg = {system:true, text:data.userName + '님이 접속했습니다.'};
-	$scope.chats.push(msg);
-	$scope.chatwin.show();
-	$scope.data.disable = false;
-	console.log('chat:: joined');
-  });
-
-  socket.on('end', function(){
-	  alert('채팅이 종료되었습니다.');
-	  $scope.data.disable = true;
-	  console.log('chat:: end');
-  });
-
-  socket.on('chat', function(data){
-	console.log('chat:: receive!');
-	$scope.chats.push(data);
-    delete $scope.data.message;
-    $ionicScrollDelegate.scrollBottom(true);
-  });
-
-  socket.on('leave1', function(){
-	  var msg = {system:true, text:'방장이 채팅을 종료해서 더 이상 채팅할 수 없습니다.'};
-	  $scope.chats.push(msg);
-	  $scope.data.disable = true;
-      $ionicScrollDelegate.scrollBottom(true);
-	  console.log('chat:: leave1');
-  });
-
-  socket.on('leave2', function(data){
-	  var msg = {system:true, text: data.userName + '님이 채팅방을 나갔습니다.'};
-	  $scope.chats.push(msg);
-	  $scope.data.disable = true;
-	  $ionicScrollDelegate.scrollBottom(true);
-	  console.log('chat:: leave2');
-  });
-
-  $scope.data.sendMessage = function() {
-	console.log('chat:: send');
-	socket.emit('send', $scope.data.message);
-  }
-
-  $scope.data.inputDown = function() {
-    if (isIOS) $scope.data.keyboardHeight = 0;
-    $ionicScrollDelegate.resize();
-  }
-
-  $scope.data.leave = function(){
-	  if(socket && socket.connected){
-		  socket.emit('leave');
-		  socket.disconnect();
-	  }
-	  delete $scope.content;
+  $scope.input.leave = function(){
+	  var socket = getSocket();
+	  socket.emit('leave');
+	  socket.disconnect();
 	  $scope.chatwin.hide();
 	  $scope.chats = [];	
   };

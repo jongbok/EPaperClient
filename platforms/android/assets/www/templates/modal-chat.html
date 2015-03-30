@@ -1,28 +1,42 @@
-<ion-modal-view view-title="채팅">
+<ion-modal-view view-title="채팅" id="userMessagesView" cache-view="false" >
 	<ion-header-bar class="chat" >
-		<div class="button button-clear" style="position:absolute; top:0px; right:0px;"  ng-click="data.leave()"><span class="icon ion-close"></span></div>
-		<p ng-bind-html="data.content | nl2br"></p>
+		<div class="button button-clear" style="position:absolute; top:0px; right:0px;"  ng-click="input.leave()"><span class="icon ion-close"></span></div>
+		<p ng-bind-html="input.content | nl2br"></p>
 	</ion-header-bar>
-	<ion-content has-bouncing="true" has-header="true" delegate-handle="chat-handle" ng-style="{ bottom: data.keyboardHeight + 'px' }" >
-      <div ng-repeat="chat in chats" >
+	<ion-content has-bouncing="true" has-header="true" class="has-header has-footer" delegate-handle="userMessageScroll" >
+      <div ng-repeat="chat in chats" class="message-wrapper" >
 		<div ng-if="!chat.system" >
-			<div ng-class="{ chat_right: chat.userId !== user.id, chat_left: chat.userId === user.id }" >
-				<p>{{ chat.text }}</p>
+			<div ng-if="chat.userId !== user.id">
+				<div class="chat-bubble left">
+					<div class="message" ng-bind-html="chat.text | nl2br" autolinker></div>
+					<div class="message-detail">
+						<span class="bold">{{chat.userName}}</span>,
+		                <span am-time-ago="chat.date"></span>			
+					</div>
+				</div>
 			</div>
-			<p>{{ chat.userName }}</p>
+			<div ng-if="chat.userId === user.id">
+				<div class="chat-bubble right">
+					<div class="message" ng-bind-html="chat.text | nl2br" autolinker></div>
+					<div class="message-detail">
+						<span class="bold">{{chat.userName}}</span>, 
+						<span am-time-ago="chat.date"></span>
+					</div>				
+				</div>
+			</div>
 		</div>
 		<div ng-if="chat.system" >
-			<u style="color:blue;">{{ chat.text }}</u>
+			<span style="color:blue;">{{ chat.text }}</span>
 		</div>
+		<div class="cf"></div>
       </div>
-      <div id="start"></div>
     </ion-content>
-    <ion-footer-bar keyboard-attach class="bar-stable item-input-inset">
-      <label class="item-input-wrapper">
-        <input type="text" chat placeholder="메세지를 입력하세요!" on-return="data.sendMessage()" ng-disabled="data.disable" ng-model="data.message" on-blur="data.inputDown()" />
-      </label>    
-      <button class="button button-clear" ng-disabled="data.disable" ng-click="data.sendMessage()">
-        Send
-      </button>
+	<form name="sendMessageForm" ng-submit="sendMessage(sendMessageForm)" novalidate>    
+    <ion-footer-bar class="bar-stable item-input-inset message-footer" keyboard-attach >
+		<label class="item-input-wrapper">
+		    <textarea ng-model="input.message" value="" placeholder="메세지를 입력하세요!" required minlength="1" maxlength="1500" msd-elastic></textarea>
+		</label>
+		<button class="button button-icon icon ion-android-send" type="submit" ng-disabled="!input.message || input.message === ''"></button>
     </ion-footer-bar>
+    </form>
 </ion-modal-view>

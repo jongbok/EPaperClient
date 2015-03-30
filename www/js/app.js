@@ -355,9 +355,7 @@ function receiveMessage($http, $rootScope, epaperConfig, callback){
 }
 
 function initUser(db, $cordovaSQLite, callback){
-	var query_create ='CREATE TABLE IF NOT EXISTS user (id integer primary key, name text, phone_no text, registration_id text)';
-	var query_pragma = "PRAGMA table_info('user')";
-	var query_alter = "ALTER TABLE user ADD COLUMN name text default '손님'";
+	var query_create ='CREATE TABLE IF NOT EXISTS user (id integer primary key, phone_no text, registration_id text)';
 	var query_select = 'select * from user';
 	
 	async.waterfall([
@@ -365,23 +363,6 @@ function initUser(db, $cordovaSQLite, callback){
 		   $cordovaSQLite.execute(db, query_create, []).then(function(res){
 			  console.log('user :: create');
 			  callback(null);
-		   });
-	   },
-	   function(callback){
-		   $cordovaSQLite.execute(db, query_pragma, []).then(function(res){
-			   console.log('user :: PRAGMA');
-			   for(var i=0; i<res.rows.length; i++){
-				   var columnName = res.rows.item(i).name;
-				   if(columnName.toUpperCase() === 'NAME'){
-					   callback(null);
-					   return;
-				   }
-			   }
-			   
-			   $cordovaSQLite.execute(db, query_alter, []).then(function(res){
-					  console.log('user :: PRAGMA alter');
-					  callback(null);
-			   });
 		   });
 	   },
 	   function(callback){
@@ -402,6 +383,12 @@ function initUser(db, $cordovaSQLite, callback){
 		}
 		callback(null, result);
 	});
+	
+	$rootScope.UserService = {
+		update: function(user){
+			
+		}	
+	};
 }
 
 function initInputBox(db, $rootScope, $cordovaSQLite, callback){
@@ -616,3 +603,21 @@ function formatSendBox(obj){
 	}
 	return obj;
 }
+
+moment.locale('ko', {
+	  relativeTime: {
+	    future: "%s후",
+	    past: "%s전",
+	    s: "%d 초",
+	    m: "a 분",
+	    mm: "%d 분",
+	    h: "an 시",
+	    hh: "%d 시",
+	    d: "a 일",
+	    dd: "%d 일",
+	    M: "a 월",
+	    MM: "%d 월",
+	    y: "a 년",
+	    yy: "%d 년"
+	  }
+	});

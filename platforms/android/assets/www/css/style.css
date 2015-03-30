@@ -22,77 +22,145 @@ font-weight: bold;
 	display: block;
 }
 
-.chat_right {
-  position:relative;
-  padding:5px 5px;
-  margin:0;
-  color:#000;
-  background:#5a8f00; /* default background for browsers without gradient support */
-  /* css3 */
-  background:-webkit-gradient(linear, 0 0, 0 100%, from(#b8db29), to(#5a8f00));
-  background:-moz-linear-gradient(#b8db29, #5a8f00);
-  background:-o-linear-gradient(#b8db29, #5a8f00);
-  background:linear-gradient(#b8db29, #5a8f00);
-  -webkit-border-radius:10px;
-  -moz-border-radius:10px;
-  border-radius:10px;
-  text-align:left;
+.bar-footer {
+  overflow: visible !important;
 }
 
-/* display of quote author (alternatively use a class on the element following the blockquote) */
-.chat_right + p {margin:0px 0 5px 45px; font-style:italic;}
-
-/* creates the triangle */
-.chat_right:after {
-  content:"";
-  position:absolute;
-  bottom:-20px;
-  left:20px;
-  border-width:0 20px 20px 0px;
-  border-style:solid;
-  border-color:transparent #5a8f00;
-  /* reduce the damage in FF3.0 */
-  display:block;
-  width:0;
+.bar-footer textarea {
+  resize: none;
+  height: 25px;
 }
 
-
-/* Empty. Add your own CSS if you like */
-.chat_left {
-  position:relative;
-  padding:5px 5px;
-  margin:0;
-  color:#000;
-  background:#f3961c; /* default background for browsers without gradient support */
-  /* css3 */
-  background:-webkit-gradient(linear, 0 0, 0 100%, from(#f9d835), to(#f3961c));
-  background:-moz-linear-gradient(#f9d835, #f3961c);
-  background:-o-linear-gradient(#f9d835, #f3961c);
-  background:linear-gradient(#f9d835, #f3961c);
-  -webkit-border-radius:10px;
-  -moz-border-radius:10px;
-  border-radius:10px;
-  text-align:right;
+/* fixes an ios bug bear */
+button.ion-android-send {
+  padding-top: 2px;
 }
 
-/* display of quote author (alternatively use a class on the element following the blockquote) */
-.chat_left + p {margin:0px 45px 5px 0; text-align:right; font-style:italic;}
-
-/* creates the triangle */
-.chat_left:before {
-  content:"";
-  position:absolute;
-  bottom:-20px;
-  right:20px;
-  border-width:0 20px 20px 0px;
-  border-style:solid;
-  border-color:transparent #f3961c;
-  /* reduce the damage in FF3.0 */
-  display:block;
-  width:0;
+img.profile-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 10px;
 }
 
-textarea {
+img.profile-pic.left {
+  left: 10px;
+}
+
+img.profile-pic.right {
+  right: 10px;
+}
+
+.ion-email {
+  float: right;
+  font-size: 32px;
+  vertical-align: middle;
+}
+
+.message {
+  font-size: 14px;
+}
+
+.message-detail {
+  white-space: nowrap;
+  font-size: 14px;
+}
+
+.bar.item-input-inset .item-input-wrapper input {
+  width: 100% !important;
+}
+
+.message-wrapper {
+  position: relative;
+}
+
+.message-wrapper:last-child {
+  margin-bottom: 10px;
+}
+
+.chat-bubble {
+  border-radius: 5px;
+  display: inline-block;
+  padding: 10px 18px;
+  position: relative;
+  margin: 10px;
+  max-width: 80%;
+}
+
+.chat-bubble:before {
+  content: "\00a0";
+  display: block;
+  height: 16px;
+  width: 9px;
+  position: absolute;
+  bottom: -7.5px;
+}
+
+.chat-bubble.left {
+  background-color: #e6e5eb;
+  float: left;
+  margin-left: 55px;
+}
+
+.chat-bubble.left:before {
+  background-color: #e6e5eb;
+  left: 10px;
+  -webkit-transform: rotate(70deg) skew(5deg);
+}
+
+.chat-bubble.right {
+  background-color: #158ffe;
+  color: #fff;
+  float: right;
+  margin-right: 55px;
+}
+
+.chat-bubble.right:before {
+  background-color: #158ffe;
+  right: 10px;
+  -webkit-transform: rotate(118deg) skew(-5deg);
+}
+
+.chat-bubble.right a.autolinker {
+  color: #fff;
+  font-weight: bold;
+}
+
+.user-messages-top-icon {
+  font-size: 28px;
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+  top: -3px;
+  right: 5px;
+}
+
+.msg-header-username {
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+  top: -3px;
+}
+
+input, textarea, .item-input, .item-input-wrapper {
+  background-color: #f4f4f4 !important;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.cf {
+  clear: both !important;
+}
+
+a.autolinker {
+  color: #3b88c3;
+  text-decoration: none;
+}
+
+textarea .send {
 	resize:both;
 	min-height:100px;
 }

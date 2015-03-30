@@ -1,17 +1,20 @@
 <ion-view view-title="환경설정">
+  <ion-nav-buttons side="right">
+  	<button class="button button-small button-positive" ng-disabled="!settingForm.$valid || !modified" ng-click="modify(user)">저장</button>
+  </ion-nav-buttons>
 <form name="settingForm" >
   <ion-content>
     <ion-list>
       <ion-item>
-      	<label class="item item-input item-select">
+      	<label class="item item-input">
       		<div class="input-label">대화명</div>
-      		<input type="text" placeholder="채팅시 사용할 대화명을 입력하세요!"  ng-model="user.name" />
+      		<input type="text" placeholder="채팅시 사용할 대화명을 입력하세요!" ng-minlength="2" ng-maxlength="10"  required  ng-model="user.name" />
       	</label>
       </ion-item>    
       <ion-item>
       	<label class="item item-input item-select">
       		<div class="input-label">성별</div>
-	      	<select name="sex" ng-model="user.sex" ng-change="modify(user)" >
+	      	<select name="sex" ng-model="user.sex" >
 	      		<option value="A" >전체</option>
 	      		<option value="M" >남자</option>
 	      		<option value="F" >여자</option>
@@ -21,7 +24,7 @@
       <ion-item>
       	<label class="item item-input item-select">
       		<div class="input-label">나이</div>
-      		<select name="age" ng-model="user.age" ng-change="modify(user)" >
+      		<select name="age" ng-model="user.age" >
       			<option value="0" >전체</option>
       			<option value="10" >10대</option>
       			<option value="20" >20대</option>

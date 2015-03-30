@@ -2,7 +2,7 @@
   <ion-content>
     <div class="list card" ng-repeat="sendMsg in sendlist" ng-drag="true" ng-drag-data="sendMsg" ng-center-anchor="true">
       <div class="item item-divider">{{sendMsg.date}}</div>
-      <div class="item item-body item-select">
+      <div class="item item-body">
         <div>
         	<p>성별: {{sendMsg.fmt_sex}}</p>
         	<p>나이: {{sendMsg.fmt_age}}</p>
