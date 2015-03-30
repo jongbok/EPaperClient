@@ -212,6 +212,13 @@ module.exports = [
         "clobbers": [
             "window.plugins.launchmyapp"
         ]
+    },
+    {
+        "file": "plugins/de.neofonie.cordova.plugin.nativeaudio/www/nativeaudio.js",
+        "id": "de.neofonie.cordova.plugin.nativeaudio.nativeaudio",
+        "clobbers": [
+            "window.plugins.NativeAudio"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -228,7 +235,8 @@ module.exports.metadata =
     "com.brodysoft.sqlitePlugin": "1.0.4",
     "com.simonmacdonald.telephonenumber": "1.0.0",
     "nl.x-services.plugins.toast": "2.0.4",
-    "nl.x-services.plugins.launchmyapp": "3.2.2"
+    "nl.x-services.plugins.launchmyapp": "3.2.2",
+    "de.neofonie.cordova.plugin.nativeaudio": "3.0.2"
 }
 // BOTTOM OF METADATA
 });

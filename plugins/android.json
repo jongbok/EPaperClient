@@ -47,6 +47,10 @@
                         {
                             "xml": "<feature name=\"LaunchMyApp\"><param name=\"android-package\" value=\"nl.xservices.plugins.LaunchMyApp\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"NativeAudio\"><param name=\"android-package\" value=\"de.neofonie.cordova.plugin.nativeaudio.NativeAudio\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -56,7 +60,7 @@
                     "/*": [
                         {
                             "xml": "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />",
-                            "count": 2
+                            "count": 3
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\" />",
@@ -72,11 +76,11 @@
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\" />",
-                            "count": 1
+                            "count": 2
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\" />",
-                            "count": 1
+                            "count": 2
                         }
                     ],
                     "/manifest": [
@@ -192,6 +196,9 @@
         },
         "nl.x-services.plugins.launchmyapp": {
             "URL_SCHEME": "epaper",
+            "PACKAGE_NAME": "com.ionicframework.epaper126847"
+        },
+        "de.neofonie.cordova.plugin.nativeaudio": {
             "PACKAGE_NAME": "com.ionicframework.epaper126847"
         }
     },

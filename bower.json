@@ -10,6 +10,8 @@
     "moment": "~2.9.0",
     "angular-moment": "~0.9.2",
     "angular-elastic": "~2.4.2",
-    "Autolinker.js": "~0.16.0"
+    "Autolinker.js": "~0.16.0",
+    "ionsound": "~3.0.0",
+    "jquery": "~2.1.3"
   }
 }

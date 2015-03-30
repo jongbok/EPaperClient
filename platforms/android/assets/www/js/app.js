@@ -7,7 +7,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'ngCordova'])
 
-.run(function($ionicPlatform, $rootScope, $http, $cordovaSQLite, $cordovaGeolocation, $cordovaPush, $cordovaToast, $ionicLoading, epaperConfig) {
+.run(function($ionicPlatform, $rootScope, $http, $cordovaSQLite, $cordovaGeolocation, $cordovaPush, $cordovaToast, $ionicLoading, $cordovaNativeAudio, epaperConfig) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -19,23 +19,19 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngCordova'])
       StatusBar.styleDefault();
     }
     
-    /*
-    Kakao.init(epaperConfig.Kakao.API_KEY);
-    Kakao.Link.createTalkLinkButton({
-      container: '#kakao-link-btn',
-      label: '번개전단 앱을 소개합니다.',
-      image: {
-        src: epaperConfig.public_uri + '/images/epaper.png',
-        width: '96',
-        height: '96'
-      },
-      webButton: {
-        text: '내근처에 있는 사람들에게 메세지 발송',
-        url: 'https://play.google.com/store/apps/details?id=com.ionicframework.epaper126847'
-      }
+    $cordovaNativeAudio.preloadSimple('error', 'sounds/computer_error.mp3')
+    .then(function (msg) {
+      console.log('sound:: ',msg);
+    }, function (error) {
+      console.error('sound:: error ',error);
     });
-    	*/
-	
+    $cordovaNativeAudio.preloadSimple('snap', 'sounds/snap.mp3')
+    .then(function (msg) {
+      console.log('sound:: ',msg);
+    }, function (error) {
+      console.error('sound:: error ',error);
+    });    
+    
 	 $ionicLoading.show({
 		 template : '<i class="ion-loading-c"></i>시스템정보를 확인하는 중입니다...', 
 		 animation: 'fade-in',  
@@ -383,12 +379,6 @@ function initUser(db, $cordovaSQLite, callback){
 		}
 		callback(null, result);
 	});
-	
-	$rootScope.UserService = {
-		update: function(user){
-			
-		}	
-	};
 }
 
 function initInputBox(db, $rootScope, $cordovaSQLite, callback){

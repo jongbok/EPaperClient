@@ -1,11 +1,11 @@
 angular.module('starter.controllers', ['ngDraggable','ionic','monospaced.elastic','angularMoment'])
 
-.controller('HomeCtrl', function($scope, $rootScope, $http, $window, $ionicModal, $ionicScrollDelegate, $timeout, epaperConfig) {
+.controller('HomeCtrl', function($scope, $rootScope, $http, $window, $ionicModal, $ionicScrollDelegate, $cordovaNativeAudio, $timeout, epaperConfig) {
 	$ionicModal.fromTemplateUrl('templates/modal-chat.html', {
 		scope : $scope
 	}).then(function(modal) {
 		$scope.chatwin = modal;
-		initialChat($scope, $ionicScrollDelegate, $timeout, epaperConfig.server_uri);
+		initialChat($scope, $ionicScrollDelegate, $timeout, $cordovaNativeAudio, epaperConfig.server_uri);
 	});
 	
 	$scope.admin_no = epaperConfig.admin_no;
@@ -13,6 +13,10 @@ angular.module('starter.controllers', ['ngDraggable','ionic','monospaced.elastic
 		if(message.phone_no !== epaperConfig.admin_no){
 			document.location.href = 'tel:' + message.phone_no;
 		}
+	};
+	
+	$scope.linkKakao = function(){
+		KakaoLinkPlugin.call('번개전단 서비스를 소개합니다.', '지금설치', 'https://play.google.com/store/apps/details?id=com.ionicframework.epaper126847');
 	};
 	
 	$scope.onDropComplete = function(message, event){
@@ -68,7 +72,7 @@ angular.module('starter.controllers', ['ngDraggable','ionic','monospaced.elastic
 	};
 })
 
-.controller('SendCtrl', function($scope, $filter, $rootScope, $ionicModal, $ionicLoading, $http, $ionicScrollDelegate, $timeout, epaperConfig){
+.controller('SendCtrl', function($scope, $filter, $rootScope, $ionicModal, $ionicLoading, $http, $ionicScrollDelegate, $timeout, $cordovaNativeAudio, epaperConfig){
 	
 	$ionicModal.fromTemplateUrl('templates/modal-shop.html', {
 		scope : $scope
@@ -83,7 +87,7 @@ angular.module('starter.controllers', ['ngDraggable','ionic','monospaced.elastic
 		scope : $scope
 	}).then(function(modal) {
 		$scope.chatwin = modal;
-		initialChat($scope, $ionicScrollDelegate, $timeout, epaperConfig.server_uri);
+		initialChat($scope, $ionicScrollDelegate, $timeout, $cordovaNativeAudio, epaperConfig.server_uri);
 	});
 	
 	var defaultObj = {
@@ -417,7 +421,7 @@ angular.module('starter.controllers', ['ngDraggable','ionic','monospaced.elastic
 }]);
 
 var socket;
-function initialChat($scope, $ionicScrollDelegate, $timeout, url){
+function initialChat($scope, $ionicScrollDelegate, $timeout, $cordovaNativeAudio, url){
 	
 	function getSocket(){
 		if(socket && socket.connected){
@@ -466,6 +470,7 @@ function initialChat($scope, $ionicScrollDelegate, $timeout, url){
 			    $timeout(function() {
 			        keepKeyboardOpen();
 			        viewScroll.scrollBottom(true);
+			        $cordovaNativeAudio.play('snap');
 			      }, 0);
 			  });
 

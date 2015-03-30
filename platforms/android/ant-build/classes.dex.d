@@ -48,6 +48,16 @@ D:\projects\EPaper\platforms\android\ant-build\classes\com\smartmobilesoftware\u
 D:\projects\EPaper\platforms\android\ant-build\classes\com\smartmobilesoftware\util\Purchase.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\com\smartmobilesoftware\util\Security.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\com\smartmobilesoftware\util\SkuDetails.class \
+D:\projects\EPaper\platforms\android\ant-build\classes\de\neofonie\cordova\plugin\nativeaudio\NativeAudio$1.class \
+D:\projects\EPaper\platforms\android\ant-build\classes\de\neofonie\cordova\plugin\nativeaudio\NativeAudio$2.class \
+D:\projects\EPaper\platforms\android\ant-build\classes\de\neofonie\cordova\plugin\nativeaudio\NativeAudio$3.class \
+D:\projects\EPaper\platforms\android\ant-build\classes\de\neofonie\cordova\plugin\nativeaudio\NativeAudio$4.class \
+D:\projects\EPaper\platforms\android\ant-build\classes\de\neofonie\cordova\plugin\nativeaudio\NativeAudio$5.class \
+D:\projects\EPaper\platforms\android\ant-build\classes\de\neofonie\cordova\plugin\nativeaudio\NativeAudio$6.class \
+D:\projects\EPaper\platforms\android\ant-build\classes\de\neofonie\cordova\plugin\nativeaudio\NativeAudio$7.class \
+D:\projects\EPaper\platforms\android\ant-build\classes\de\neofonie\cordova\plugin\nativeaudio\NativeAudio.class \
+D:\projects\EPaper\platforms\android\ant-build\classes\de\neofonie\cordova\plugin\nativeaudio\NativeAudioAsset.class \
+D:\projects\EPaper\platforms\android\ant-build\classes\de\neofonie\cordova\plugin\nativeaudio\NativeAudioAssetComplex.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\nl\xservices\plugins\LaunchMyApp.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\nl\xservices\plugins\Toast$1.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\nl\xservices\plugins\Toast.class \
