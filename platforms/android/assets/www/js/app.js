@@ -125,8 +125,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngCordova'])
                 	 });
                  },
                  function(user, callback){
-                	var query_insert = 'INSERT INTO user(id, name, phone_no, registration_id) VALUES(?,?,?,?)';
-         			var args = [user.id, user.name, user.phone_no, user.registration_id];
+                	var query_insert = 'INSERT INTO user(id, phone_no, registration_id) VALUES(?,?,?)';
+         			var args = [user.id, user.phone_no, user.registration_id];
          			$cordovaSQLite.execute(db, query_insert, args).then(function(res){
          				console.log('user :: insert');
          				callback(null, user);
@@ -336,6 +336,7 @@ function receiveMessage($http, $rootScope, epaperConfig, callback){
 		 console.log('get message::' + JSON.stringify(data));
 		 for(var i=0; i<data.length; i++){
 			 var message = {
+					 id: data[i].id,
 					 date: data[i].create_dt, 
 					 phone_no: data[i].phone_no,
 					 content: data[i].content
@@ -384,7 +385,7 @@ function initUser(db, $cordovaSQLite, callback){
 function initInputBox(db, $rootScope, $cordovaSQLite, callback){
     var query_create = 'CREATE TABLE IF NOT EXISTS input_box (id integer primary key, date text, phone_no text, content text)';
     var query_drop = 'DROP TABLE IF EXISTS input_box';
-    var query_insert = 'INSERT INTO input_box(date, phone_no, content) VALUES (?,?,?)';
+    var query_insert = 'INSERT INTO input_box(id, date, phone_no, content) VALUES (?,?,?,?)';
     var query_select = 'SELECT * FROM input_box order by date desc';
     
     async.waterfall([
@@ -420,7 +421,7 @@ function initInputBox(db, $rootScope, $cordovaSQLite, callback){
     	},
     	insert: function(message){
     		var query = query_insert;
-    		var args = [message.date, message.phone_no, message.content];
+    		var args = [message.id, message.date, message.phone_no, message.content];
     		$cordovaSQLite.execute(db, query, args).then(function(res){
     			message.id = res.insertId;
     			$rootScope.messages.splice(0, 0, message);

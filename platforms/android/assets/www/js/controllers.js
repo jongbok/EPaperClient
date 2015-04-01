@@ -5,18 +5,14 @@ angular.module('starter.controllers', ['ngDraggable','ionic','monospaced.elastic
 		scope : $scope
 	}).then(function(modal) {
 		$scope.chatwin = modal;
-		initialChat($scope, $ionicScrollDelegate, $timeout, $cordovaNativeAudio, epaperConfig.server_uri);
+		initialChat($scope, $ionicScrollDelegate, $timeout, $cordovaNativeAudio, epaperConfig);
 	});
 	
 	$scope.admin_no = epaperConfig.admin_no;
-	$scope.phoneCall = function(message){
+	$scope.startChat = function(message){
 		if(message.phone_no !== epaperConfig.admin_no){
-			document.location.href = 'tel:' + message.phone_no;
+			$scope.input.join(message.id, message.content);
 		}
-	};
-	
-	$scope.linkKakao = function(){
-		KakaoLinkPlugin.call('번개전단 서비스를 소개합니다.', '지금설치', 'https://play.google.com/store/apps/details?id=com.ionicframework.epaper126847');
 	};
 	
 	$scope.onDropComplete = function(message, event){
@@ -87,7 +83,7 @@ angular.module('starter.controllers', ['ngDraggable','ionic','monospaced.elastic
 		scope : $scope
 	}).then(function(modal) {
 		$scope.chatwin = modal;
-		initialChat($scope, $ionicScrollDelegate, $timeout, $cordovaNativeAudio, epaperConfig.server_uri);
+		initialChat($scope, $ionicScrollDelegate, $timeout, $cordovaNativeAudio, epaperConfig);
 	});
 	
 	var defaultObj = {
@@ -176,7 +172,7 @@ angular.module('starter.controllers', ['ngDraggable','ionic','monospaced.elastic
 			 $scope.sendMsg.paper_cnt = angular.copy($rootScope.user.paper_coin);
 			 console.log('send message:: success!');
 			 
-			 $scope.input.create(message.id, message.content);
+			 $scope.input.create(data.id, message.content);
 		 })
 		 .error(function(data, status, headers, config){
 			 $ionicLoading.hide();
@@ -421,13 +417,19 @@ angular.module('starter.controllers', ['ngDraggable','ionic','monospaced.elastic
 }]);
 
 var socket;
-function initialChat($scope, $ionicScrollDelegate, $timeout, $cordovaNativeAudio, url){
+function initialChat($scope, $ionicScrollDelegate, $timeout, $cordovaNativeAudio, epaperConfig){
 	
 	function getSocket(){
 		if(socket && socket.connected){
 			return socket;
 		}else{
-			socket = io.connect(url, {'force new connection': true});
+			var url = epaperConfig.server_uri;
+			var header = epaperConfig.getHttpHeader();
+			var options = {
+					'force new connection': true,
+					query: 'tocken=' +  encodeURIComponent(header['auth-tocken']) + '&timestamp=' + (new Date()).getTime()
+			};
+			socket = io.connect(url, options);
 			
 			  socket.on('connected', function(){
 				  console.log('chat:: connected!');
