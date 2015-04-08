@@ -2,6 +2,7 @@ D:\projects\EPaper\platforms\android\ant-build\classes.dex : \
 D:\projects\EPaper\platforms\android\ant-build\classes\com\android\vending\billing\IInAppBillingService$Stub$Proxy.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\com\android\vending\billing\IInAppBillingService$Stub.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\com\android\vending\billing\IInAppBillingService.class \
+D:\projects\EPaper\platforms\android\ant-build\classes\com\forif\cordova\plugin\kakao\KakaoPlugin.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\com\ionic\keyboard\IonicKeyboard$1.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\com\ionic\keyboard\IonicKeyboard$2.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\com\ionic\keyboard\IonicKeyboard$3.class \
@@ -13,8 +14,11 @@ D:\projects\EPaper\platforms\android\ant-build\classes\com\ionicframework\epaper
 D:\projects\EPaper\platforms\android\ant-build\classes\com\ionicframework\epaper126847\Manifest$permission.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\com\ionicframework\epaper126847\Manifest.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\com\ionicframework\epaper126847\R$attr.class \
+D:\projects\EPaper\platforms\android\ant-build\classes\com\ionicframework\epaper126847\R$color.class \
+D:\projects\EPaper\platforms\android\ant-build\classes\com\ionicframework\epaper126847\R$dimen.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\com\ionicframework\epaper126847\R$drawable.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\com\ionicframework\epaper126847\R$string.class \
+D:\projects\EPaper\platforms\android\ant-build\classes\com\ionicframework\epaper126847\R$style.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\com\ionicframework\epaper126847\R$xml.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\com\ionicframework\epaper126847\R.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\com\plugin\gcm\CordovaGCMBroadcastReceiver.class \
@@ -117,5 +121,11 @@ D:\projects\EPaper\platforms\android\ant-build\classes\org\pgsqlite\SQLitePlugin
 D:\projects\EPaper\platforms\android\ant-build\classes\org\pgsqlite\SQLitePlugin$QueryType.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\org\pgsqlite\SQLitePlugin.class \
 D:\projects\EPaper\platforms\android\ant-build\dexedLibs\classes-ae1f4b6b5682fb4b78d02329084ad72d.jar \
+D:\projects\EPaper\platforms\android\ant-build\dexedLibs\jackson-databind-2.3.1-2d2cd8adecbe30361a93c85b3c254bbd.jar \
+D:\projects\EPaper\platforms\android\ant-build\dexedLibs\kakao-sdk-fe253aeb5f5328ae1e66544f8170e64a.jar \
+D:\projects\EPaper\platforms\android\ant-build\dexedLibs\slf4j-api-1.7.5-7d023ccd8bdd345206ea8f292a743c8f.jar \
+D:\projects\EPaper\platforms\android\ant-build\dexedLibs\jackson-annotations-2.3.0-23f38285a9d874e0a6c484659dd84790.jar \
 D:\projects\EPaper\platforms\android\ant-build\dexedLibs\gcm-9e2fbeb1ee8d3dce833f2ab4f9b00541.jar \
+D:\projects\EPaper\platforms\android\ant-build\dexedLibs\jackson-core-2.3.1-a45436f836b661217d1c11ff1db36928.jar \
 D:\projects\EPaper\platforms\android\ant-build\dexedLibs\android-support-v13-c8c94d40dce9249fe701e3cd7ff1d23e.jar \
+D:\projects\EPaper\platforms\android\ant-build\dexedLibs\async-http-client-1.8.3-0a3566efa1cddce01534ffc773a8ef6b.jar \

@@ -241,7 +241,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngCordova'])
 })
 
 .constant('epaperConfig', {
-	server_uri : 'https://54.65.104.219:3000',
+	server_uri : 'https://54.65.104.219',
 	public_uri : 'http://54.65.104.219',
 	admin_no : '00000',
 	Kakao : {
@@ -600,15 +600,15 @@ moment.locale('ko', {
 	    future: "%s후",
 	    past: "%s전",
 	    s: "%d 초",
-	    m: "a 분",
+	    m: "%d 분",
 	    mm: "%d 분",
-	    h: "an 시",
+	    h: "%d 시",
 	    hh: "%d 시",
-	    d: "a 일",
+	    d: "%d 일",
 	    dd: "%d 일",
-	    M: "a 월",
+	    M: "%d 월",
 	    MM: "%d 월",
-	    y: "a 년",
+	    y: "%d 년",
 	    yy: "%d 년"
 	  }
 	});

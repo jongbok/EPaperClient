@@ -219,6 +219,13 @@ module.exports = [
         "clobbers": [
             "window.plugins.NativeAudio"
         ]
+    },
+    {
+        "file": "plugins/com.forif.cordova.plugin.kakao.KakaoPlugin/www/KakaoPlugin.js",
+        "id": "com.forif.cordova.plugin.kakao.KakaoPlugin.KakaoPlugin",
+        "clobbers": [
+            "KakaoPlugin"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -236,7 +243,8 @@ module.exports.metadata =
     "com.simonmacdonald.telephonenumber": "1.0.0",
     "nl.x-services.plugins.toast": "2.0.4",
     "nl.x-services.plugins.launchmyapp": "3.2.2",
-    "de.neofonie.cordova.plugin.nativeaudio": "3.0.2"
+    "de.neofonie.cordova.plugin.nativeaudio": "3.0.2",
+    "com.forif.cordova.plugin.kakao.KakaoPlugin": "0.0.1"
 }
 // BOTTOM OF METADATA
 });

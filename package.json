@@ -19,6 +19,7 @@
     "org.apache.cordova.geolocation",
     "org.apache.cordova.media",
     "..\\AndroidInAppBilling",
-    "D:\\projects\\AndroidInAppBilling"
+    "D:\\projects\\AndroidInAppBilling",
+    "D:\\workspace\\KakaoLinkPlugin"
   ]
 }

@@ -8,6 +8,21 @@ angular.module('starter.controllers', ['ngDraggable','ionic','monospaced.elastic
 		initialChat($scope, $ionicScrollDelegate, $timeout, $cordovaNativeAudio, epaperConfig);
 	});
 	
+	$scope.kakaoLink = function(){
+		var options = {
+			text: '내 근처에 있는 사람들에게 메세지를 보내고 채팅을 할 수 있는 번개전단 App을 소개합니다.',
+			image: {
+				src: epaperConfig.public_uri + '/images/epaper.png',
+				width: 96,
+				height: 96
+			},
+			appLink: { text:'자세히 보기'}
+		};
+		KakaoPlugin.link(options, function(){}, function(message){
+			alert('카카오톡 연결중 오류가 발생하였습니다.');
+		});
+	};
+	
 	$scope.admin_no = epaperConfig.admin_no;
 	$scope.startChat = function(message){
 		if(message.phone_no !== epaperConfig.admin_no){
@@ -486,7 +501,6 @@ function initialChat($scope, $ionicScrollDelegate, $timeout, $cordovaNativeAudio
 			  socket.on('leave2', function(data){
 				  var msg = {system:true, text: data.userName + '님이 채팅방을 나갔습니다.'};
 				  $scope.chats.push(msg);
-				  $scope.input.disable = true;
 				  console.log('chat:: leave2');
 			  });
 			  
@@ -499,7 +513,7 @@ function initialChat($scope, $ionicScrollDelegate, $timeout, $cordovaNativeAudio
 	}
 	
 	$scope.chats = [];	
-    $scope.input = { message: '' };	
+    $scope.input = { message: '', disable: false };	
 	var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
     var footerBar; // gets set in $ionicView.enter
     var txtInput; // ^^^

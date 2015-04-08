@@ -52,4 +52,7 @@
     <preference name="DisallowOverscroll" value="true" />
     <preference name="BackupWebStorage" value="none" />
     <preference name="Fullscreen" value="false" />
+    <feature name="KakaoPlugin">
+        <param name="android-package" value="com.forif.cordova.plugin.kakao.KakaoPlugin" />
+    </feature>
 </widget>

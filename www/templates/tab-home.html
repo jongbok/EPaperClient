@@ -1,8 +1,8 @@
 <ion-view view-title="받은전단지" ng-drop="true" ng-drop-success="onDropComplete($data,$event)" >
   	<ion-nav-buttons side="right">
-<!--    	
-		<div class="fb-like" data-href="https://www.facebook.com/pages/%EB%B2%88%EA%B0%9C%EC%A0%84%EB%8B%A8/885750664818955" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true">facebook</div>
--->  		
+  		<button class="button button-small button-clear" ng-click="kakaoLink()">
+  			<img src="img/kakaolink_btn.png" />
+  		</button>
   	</ion-nav-buttons>
   <ion-content class="padding" >
     <div class="list card" ng-repeat="message in messages" ng-drag="true" ng-drag-data="message" ng-center-anchor="true" >

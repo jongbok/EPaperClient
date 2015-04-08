@@ -51,6 +51,10 @@
                         {
                             "xml": "<feature name=\"NativeAudio\"><param name=\"android-package\" value=\"de.neofonie.cordova.plugin.nativeaudio.NativeAudio\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"KakaoPlugin\"><param name=\"android-package\" value=\"com.forif.cordova.plugin.kakao.KakaoPlugin\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -119,6 +123,10 @@
                         {
                             "xml": "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\" />",
                             "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.INTERNET\" />",
+                            "count": 1
                         }
                     ],
                     "/manifest/application": [
@@ -137,6 +145,10 @@
                         {
                             "xml": "<activity android:label=\"@string/app_name\" android:name=\"org.pgsqlite.SQLitePlugin\"></activity>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<meta-data android:name=\"com.kakao.sdk.AppKey\" android:value=\"@string/kakao_app_key\" />",
+                            "count": 1
                         }
                     ],
                     "/*/application/activity": [
@@ -152,6 +164,34 @@
                     "/*": [
                         {
                             "xml": "<string name=\"billing_key_param\">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoY6PBdkZGs9baxJBw6rUEhmDu3G0N+LQ3vvj1+WpnlsRmS+HHkrBohofDzCMTHM82XaBcmuBZfbEt5+mSvC5qqmlby8uw0H1FlMZ8p8FzlS6tMrIxC7qMVHuHGsDED+6Lmj1CN+dM3+1zehtGZH9Tc2B2Rj60xy7OmIa8D4qBDo9usqRS97X8YAaWZup5Ps4AJIayL79BzEvwPq7/0Nnf7lXIai2GW5EjUn7tav1X+55mISrXsOrmQ1anzklMveJGedgM7b8+fgbav4+x4+b+DNKY/l5FjzHjxZulpCwv1NIFj6/6GEZMI9rV1q0TlubY7ZkP3/DOdN9OSLRHVX7sQIDAQAB</string>",
+                            "count": 1
+                        }
+                    ]
+                }
+            },
+            "res/values/kakao_strings.xml": {
+                "parents": {
+                    "/*": [
+                        {
+                            "xml": "<string name=\"kakao_app_key\">61357384742c698b4918ac7ad0a777e5</string>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<string name=\"kakao_scheme\">kakao61357384742c698b4918ac7ad0a777e5</string>",
+                            "count": 1
+                        }
+                    ]
+                }
+            },
+            "res/values-ko/kakao_strings.xml": {
+                "parents": {
+                    "/*": [
+                        {
+                            "xml": "<string name=\"kakao_app_key\">61357384742c698b4918ac7ad0a777e5</string>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<string name=\"kakao_scheme\">kakao61357384742c698b4918ac7ad0a777e5</string>",
                             "count": 1
                         }
                     ]
@@ -199,6 +239,10 @@
             "PACKAGE_NAME": "com.ionicframework.epaper126847"
         },
         "de.neofonie.cordova.plugin.nativeaudio": {
+            "PACKAGE_NAME": "com.ionicframework.epaper126847"
+        },
+        "com.forif.cordova.plugin.kakao.KakaoPlugin": {
+            "API_KEY": "61357384742c698b4918ac7ad0a777e5",
             "PACKAGE_NAME": "com.ionicframework.epaper126847"
         }
     },

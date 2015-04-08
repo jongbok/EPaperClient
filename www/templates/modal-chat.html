@@ -36,7 +36,7 @@
 		<label class="item-input-wrapper">
 		    <textarea ng-model="input.message" value="" placeholder="메세지를 입력하세요!" required minlength="1" maxlength="1500" msd-elastic></textarea>
 		</label>
-		<button class="button button-icon icon ion-android-send" type="submit" ng-disabled="!input.message || input.message === ''"></button>
+		<button class="button button-icon icon ion-android-send" type="submit" ng-disabled="!input.message || input.message === '' || input.disable"></button>
     </ion-footer-bar>
     </form>
 </ion-modal-view>

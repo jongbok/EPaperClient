@@ -14,7 +14,12 @@ D:\projects\EPaper\platforms\android\res\drawable-port-mdpi\screen.png \
 D:\projects\EPaper\platforms\android\res\drawable-port-xhdpi\screen.png \
 D:\projects\EPaper\platforms\android\res\drawable-xhdpi\icon.png \
 D:\projects\EPaper\platforms\android\res\values\billing_key_param.xml \
+D:\projects\EPaper\platforms\android\res\values\kakao_colors.xml \
+D:\projects\EPaper\platforms\android\res\values\kakao_dimens.xml \
+D:\projects\EPaper\platforms\android\res\values\kakao_strings.xml \
+D:\projects\EPaper\platforms\android\res\values\kakao_styles.xml \
 D:\projects\EPaper\platforms\android\res\values\strings.xml \
+D:\projects\EPaper\platforms\android\res\values-ko\kakao_strings.xml \
 D:\projects\EPaper\platforms\android\res\xml\config.xml \
 D:\projects\EPaper\platforms\android\ant-build\res\drawable\icon.png \
 D:\projects\EPaper\platforms\android\ant-build\res\drawable-hdpi\icon.png \
@@ -325,6 +330,7 @@ D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client\test\url.js
 D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client\test\support\env.js \
 D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client\test\support\server.js \
 D:\projects\EPaper\platforms\android\assets\www\plugins\com.brodysoft.sqlitePlugin \
+D:\projects\EPaper\platforms\android\assets\www\plugins\com.forif.cordova.plugin.kakao.KakaoPlugin \
 D:\projects\EPaper\platforms\android\assets\www\plugins\com.ionic.keyboard \
 D:\projects\EPaper\platforms\android\assets\www\plugins\com.phonegap.plugins.PushPlugin \
 D:\projects\EPaper\platforms\android\assets\www\plugins\com.smartmobilesoftware.androidinappbilling \
@@ -336,6 +342,8 @@ D:\projects\EPaper\platforms\android\assets\www\plugins\org.apache.cordova.file 
 D:\projects\EPaper\platforms\android\assets\www\plugins\org.apache.cordova.media \
 D:\projects\EPaper\platforms\android\assets\www\plugins\com.brodysoft.sqlitePlugin\www \
 D:\projects\EPaper\platforms\android\assets\www\plugins\com.brodysoft.sqlitePlugin\www\SQLitePlugin.js \
+D:\projects\EPaper\platforms\android\assets\www\plugins\com.forif.cordova.plugin.kakao.KakaoPlugin\www \
+D:\projects\EPaper\platforms\android\assets\www\plugins\com.forif.cordova.plugin.kakao.KakaoPlugin\www\KakaoPlugin.js \
 D:\projects\EPaper\platforms\android\assets\www\plugins\com.ionic.keyboard\www \
 D:\projects\EPaper\platforms\android\assets\www\plugins\com.ionic.keyboard\www\keyboard.js \
 D:\projects\EPaper\platforms\android\assets\www\plugins\com.phonegap.plugins.PushPlugin\www \
