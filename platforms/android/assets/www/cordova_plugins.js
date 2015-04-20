@@ -226,6 +226,13 @@ module.exports = [
         "clobbers": [
             "KakaoPlugin"
         ]
+    },
+    {
+        "file": "plugins/com.hutchind.cordova.plugins.launcher/www/Launcher.js",
+        "id": "com.hutchind.cordova.plugins.launcher.Launcher",
+        "clobbers": [
+            "plugins.launcher"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -244,7 +251,8 @@ module.exports.metadata =
     "nl.x-services.plugins.toast": "2.0.4",
     "nl.x-services.plugins.launchmyapp": "3.2.2",
     "de.neofonie.cordova.plugin.nativeaudio": "3.0.2",
-    "com.forif.cordova.plugin.kakao.KakaoPlugin": "0.0.1"
+    "com.forif.cordova.plugin.kakao.KakaoPlugin": "0.0.1",
+    "com.hutchind.cordova.plugins.launcher": "0.2.2"
 }
 // BOTTOM OF METADATA
 });

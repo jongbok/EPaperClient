@@ -3,6 +3,14 @@ D:\projects\EPaper\platforms\android\ant-build\classes\com\android\vending\billi
 D:\projects\EPaper\platforms\android\ant-build\classes\com\android\vending\billing\IInAppBillingService$Stub.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\com\android\vending\billing\IInAppBillingService.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\com\forif\cordova\plugin\kakao\KakaoPlugin.class \
+D:\projects\EPaper\platforms\android\ant-build\classes\com\hutchind\cordova\plugins\launcher\Launcher$1.class \
+D:\projects\EPaper\platforms\android\ant-build\classes\com\hutchind\cordova\plugins\launcher\Launcher$2.class \
+D:\projects\EPaper\platforms\android\ant-build\classes\com\hutchind\cordova\plugins\launcher\Launcher$3.class \
+D:\projects\EPaper\platforms\android\ant-build\classes\com\hutchind\cordova\plugins\launcher\Launcher$4.class \
+D:\projects\EPaper\platforms\android\ant-build\classes\com\hutchind\cordova\plugins\launcher\Launcher$5.class \
+D:\projects\EPaper\platforms\android\ant-build\classes\com\hutchind\cordova\plugins\launcher\Launcher$LauncherRunnable.class \
+D:\projects\EPaper\platforms\android\ant-build\classes\com\hutchind\cordova\plugins\launcher\Launcher.class \
+D:\projects\EPaper\platforms\android\ant-build\classes\com\hutchind\cordova\plugins\launcher\ParseTypes.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\com\ionic\keyboard\IonicKeyboard$1.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\com\ionic\keyboard\IonicKeyboard$2.class \
 D:\projects\EPaper\platforms\android\ant-build\classes\com\ionic\keyboard\IonicKeyboard$3.class \

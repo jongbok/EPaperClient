@@ -23,6 +23,17 @@ angular.module('starter.controllers', ['ngDraggable','ionic','monospaced.elastic
 		});
 	};
 	
+	$scope.facebookLink = function(){
+		window.plugins.launcher.launch({uri:'fb://page/885750664818955'}, function(data){
+				console.log('facebook open');
+			}, 
+			function(errMsg){
+				console.error('facebook open error - ' + errMsg);
+				alert('Facebook App을 실행할 수 없습니다.');
+			}
+		);
+	};
+	
 	$scope.admin_no = epaperConfig.admin_no;
 	$scope.startChat = function(message){
 		if(message.phone_no !== epaperConfig.admin_no){

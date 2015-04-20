@@ -49,6 +49,7 @@ D:\projects\EPaper\platforms\android\assets\www\telephonenumber.js \
 D:\projects\EPaper\platforms\android\assets\www\templates \
 D:\projects\EPaper\platforms\android\assets\www\css\style.css \
 D:\projects\EPaper\platforms\android\assets\www\img\epaper.png \
+D:\projects\EPaper\platforms\android\assets\www\img\facebook_like.jpg \
 D:\projects\EPaper\platforms\android\assets\www\img\ionic.png \
 D:\projects\EPaper\platforms\android\assets\www\img\kakaolink_btn.png \
 D:\projects\EPaper\platforms\android\assets\www\js\app.js \
@@ -331,6 +332,7 @@ D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client\test\suppor
 D:\projects\EPaper\platforms\android\assets\www\lib\socket.io-client\test\support\server.js \
 D:\projects\EPaper\platforms\android\assets\www\plugins\com.brodysoft.sqlitePlugin \
 D:\projects\EPaper\platforms\android\assets\www\plugins\com.forif.cordova.plugin.kakao.KakaoPlugin \
+D:\projects\EPaper\platforms\android\assets\www\plugins\com.hutchind.cordova.plugins.launcher \
 D:\projects\EPaper\platforms\android\assets\www\plugins\com.ionic.keyboard \
 D:\projects\EPaper\platforms\android\assets\www\plugins\com.phonegap.plugins.PushPlugin \
 D:\projects\EPaper\platforms\android\assets\www\plugins\com.smartmobilesoftware.androidinappbilling \
@@ -344,6 +346,8 @@ D:\projects\EPaper\platforms\android\assets\www\plugins\com.brodysoft.sqlitePlug
 D:\projects\EPaper\platforms\android\assets\www\plugins\com.brodysoft.sqlitePlugin\www\SQLitePlugin.js \
 D:\projects\EPaper\platforms\android\assets\www\plugins\com.forif.cordova.plugin.kakao.KakaoPlugin\www \
 D:\projects\EPaper\platforms\android\assets\www\plugins\com.forif.cordova.plugin.kakao.KakaoPlugin\www\KakaoPlugin.js \
+D:\projects\EPaper\platforms\android\assets\www\plugins\com.hutchind.cordova.plugins.launcher\www \
+D:\projects\EPaper\platforms\android\assets\www\plugins\com.hutchind.cordova.plugins.launcher\www\Launcher.js \
 D:\projects\EPaper\platforms\android\assets\www\plugins\com.ionic.keyboard\www \
 D:\projects\EPaper\platforms\android\assets\www\plugins\com.ionic.keyboard\www\keyboard.js \
 D:\projects\EPaper\platforms\android\assets\www\plugins\com.phonegap.plugins.PushPlugin\www \
